@@ -1,0 +1,25 @@
+.btn-green {
+	color : #009407;
+	font-weight: 600;
+	font-size: unset;
+	text-decoration: underline;
+}
+
+.btn-red {
+	color : #a31300;
+	font-weight: 600;
+	font-size: unset;
+	text-decoration: underline;
+}
+
+.btn-grey {
+	color : #ababab;
+	font-weight: 600;
+	font-size: unset;
+	text-decoration: underline;
+}
+
+#map { 
+	height: 300px;    
+	width: 600px;            
+}          

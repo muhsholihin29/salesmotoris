@@ -16,4 +16,10 @@ class StoreController extends Controller
 		return \Template::display_gentelella('store', 'Toko', $data);
             // return view('layouts.dashboard');
 	}
+
+	function approve(Request $request)
+	{
+		\App\Store::where('id','=', $request->id)->update(['status' => 1]);
+		return redirect('store')->with('approve', 'Data');
+	}
 }

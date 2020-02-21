@@ -2,6 +2,7 @@
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- <link rel="stylesheet" href="{{ asset('assets/table_horz_scroll/vendor/bootstrap/css/bootstrap.min.css') }}"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 </head>
 <!-- page content -->
 <div class="right_col" role="main">
@@ -44,10 +45,18 @@
             <td><center>{{$store->name}}</center></td>
             <td><center>{{$store->address}}</center></td>
             <td>
-              <button type="button" class="btn transparent btn-grey" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-map" onclick="return approve('');">Lihat Map</button>
+              <button type="button" class="btn transparent btn-grey" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-map" onclick="return initMap('{{$store->coordinate}}');">Lihat Map</button>
             </td>
-            <td><button type="button" class="btn transparent btn-green" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-edit-store" onclick="return approve('');">Setujui</button>
-              <button type="button" class="btn transparent btn-red" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-delete-store" onclick="return delete('');">Hapus</button>
+            <td>
+              <?php if ($store->status == 0) { ?>
+                <button type="button" class="btn transparent btn-green" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-confi" onclick="return approveConfirm('{{$store->id}}','{{$store->name}}');">Setujui</button>
+                <button type="button" class="btn transparent btn-red" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-delete-store" onclick="return reject($store->id);">Tolak</button>
+                <?php 
+              } else { ?>
+                <button type="button" class="btn transparent btn-green" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-edit-store" onclick="return delete($store->id);">Hapus</button>
+                <button type="button" class="btn transparent btn-red" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-delete-store" onclick="return reject($store->id);">Tolak</button>
+                <?php 
+              } ?>
             </td>
           </tr>
           @endforeach
@@ -61,15 +70,15 @@
 <div class="modal fade modal-map" id="modal-edit-store" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">Map </h4><span> </span>
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body"> 
-        <div style="padding:10px">
-          <div id="map"></div>
+        <div class="row" id="maps">
+          <div class="col" id="map"></div>
+          <div class="col" id="pano"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -80,85 +89,44 @@
     </div>
   </div>
 </div>
-<!-- /Map Modal -->   
+<!-- /Map Modal --> 
+<!-- Confirm Approve Modal -->   
+<div class="modal fade modal-confi"tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form action="{{url('/')}}/store/crud/approve" method="post" accept-charset="utf-8">
+        @csrf
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Setujui Toko</h4>
+        </div>
+        <div class="modal-body body-confi" id="md-body-confi">
+        </div>
+        <input type="hidden" name="id" id="storeId">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <input type="submit" class="btn btn-success" name="" value="Ya">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- /Confirm Approve Modal -->   
 </div>
 </div>
 
 <!-- /page content-->
-<!-- <script src="{{asset('js/views/store.js')}}"></script> -->
-<script type="text/javascript">
-  var map;
 
-  function initMap() {                            
-    var latitude = 27.7172453; // YOUR LATITUDE VALUE
-    var longitude = 85.3239605; // YOUR LONGITUDE VALUE
-
-    var myLatLng = {lat: latitude, lng: longitude};
-
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 6
-    });
-    infoWindow = new google.maps.InfoWindow;
-
-    var markerCurrent;
-    var mapCurrent;
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }; 
-        infoWindow.setPosition(pos);
-        map.setCenter(pos);
-        markerCurrent = new google.maps.Marker({
-          position: pos, 
-          map: map, 
-        });
-
-      }, function() {
-
-      });
-    } else {
-        // Browser doesn't support Geolocation
-        // handleLocationError(false, infoWindow, map.getCenter());    
-      }
-      var marker;
-    // Create new marker on double click event on the map
-    google.maps.event.addListener(map,'click',function(event) {
-      if (marker) {
-        marker.setPosition(event.latLng);
-        marker.setDraggable(true);
-      }else{
-        marker = new google.maps.Marker({
-          position: event.latLng, 
-          map: map, 
-          draggable: true,
-                // title: event.latLng.lat()+', '+event.latLng.lng(),
-                icon: "http://maps.google.com/mapfiles/kml/paddle/O.png"
-              });
-      }
-        // Update lat/long value of div when the marker is clicked
-        marker.addListener('click', function() {
-          document.getElementById('latclicked').innerHTML = event.latLng.lat();
-          document.getElementById('longclicked').innerHTML =  event.latLng.lng();
-        });   
-        // Update lat/long value of div when anywhere in the map is clicked    
-        google.maps.event.addListener(map,'click',function(event) {                
-          document.getElementById('latclicked').innerHTML = event.latLng.lat();
-          document.getElementById('longclicked').innerHTML =  event.latLng.lng();
-        });
-
-        // Update lat/long value of div when you move the mouse over the map
-        google.maps.event.addListener(map,'mousemove',function(event) {
-          document.getElementById('latmoved').innerHTML = event.latLng.lat();
-          document.getElementById('longmoved').innerHTML = event.latLng.lng();
-        });
-
-      });
-  }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA&callback=initMap"
+<script src="{{asset('js/views/store.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
 async defer></script>
+<script type="text/javascript">
+  
+@if (Session::has('approve'))
+  console.log("ini approve");
+    setTimeout(function() {
+        pnotify('Sukses', 'Toko berhasil disetujui','success');
+        console.log('aaaa');
+    }, 2000);
+@endif
+</script>

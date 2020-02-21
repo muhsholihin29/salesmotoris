@@ -20,6 +20,14 @@
 }
 
 #map { 
-	height: 300px;    
-	width: 600px;            
+	height: 400px;    
+	width: auto;            
 }          
+#pano { 
+	height: 400px;    
+	width: auto;            
+}   
+
+.body-confi{
+	display: flex;
+}

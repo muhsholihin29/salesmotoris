@@ -12,15 +12,21 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('tes');
 });
 
 // Route::get('/', 'MainController@index');
 // Route::get('/store', '');
 Route::get('/store', [
-    'uses' => 'StoreController@index',
-    'middleware' => 'auth'
+	'uses' => 'StoreController@index',
+	'middleware' => 'auth'
 ]);
+Route::group(['prefix' => '/store/crud'], function(){ //bagian crud
+	Route::post('approve', [
+		'uses' => 'StoreController@approve',
+		'middleware' => 'auth'
+	]);
+});
 // Route::get('/login', 'MainController@loginPage');
 
 

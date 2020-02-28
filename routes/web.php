@@ -21,12 +21,10 @@ Route::get('/store', [
 	'uses' => 'StoreController@index',
 	'middleware' => 'auth'
 ]);
-Route::group(['prefix' => '/store/crud'], function(){ //bagian crud
-	Route::post('approve', [
-		'uses' => 'StoreController@approve',
-		'middleware' => 'auth'
-	]);
-});
+
+// Route::group(['middleware' => 'api'], function () {
+	// Route::post('/api/crud/add-store', 'StoreController@addStore');
+// });
 // Route::get('/login', 'MainController@loginPage');
 
 

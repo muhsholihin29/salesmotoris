@@ -58,6 +58,15 @@ class LoginController extends Controller
             $loginField => $request->input($this->username())
         ]);
 
-        return $request->only($loginField, 'password');
+        return $request->only($loginField, 'password', 'level');
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        $request->merge(['level' => 'admin']);
+
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
     }
 }

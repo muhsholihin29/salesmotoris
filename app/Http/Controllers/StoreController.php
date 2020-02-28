@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
+
 class StoreController extends Controller
 {
 	function index(Request $request)
@@ -21,5 +22,17 @@ class StoreController extends Controller
 	{
 		\App\Store::where('id','=', $request->id)->update(['status' => 1]);
 		return redirect('store')->with('approve', 'Data');
+	}
+
+	function addStore(Request $request, $id)
+	{
+		$user = \App\User::find(1);
+
+		// return $user->toJson();
+		echo($id);
+	}
+	function zzz(Request $request)
+	{
+		// echo csrf_field();
 	}
 }

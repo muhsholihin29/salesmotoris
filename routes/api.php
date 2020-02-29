@@ -54,6 +54,7 @@ prefix('v2')->group(function () {
 	});
 	Route::prefix('report')->group(function () {
 		Route::get('/', 'api\ApiReportController@index');
+		Route::get('/monthly', 'api\ApiReportController@monthly');
 		// Route::post('/', 'api\ApiReportController@update');
 	});
 });

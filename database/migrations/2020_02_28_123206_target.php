@@ -13,7 +13,14 @@ class Target extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('target', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('id_sales'6);
+            $table->integer('id_product',11);
+            $table->integer('target',60);
+            $table->integer('status',1);         
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +30,6 @@ class Target extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('target');
     }
 }

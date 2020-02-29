@@ -11,11 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-	return view('tes');
-});
+// Route::get('/', function () {
+// 	return view('tes');
+// });
 
-// Route::get('/', 'MainController@index');
+Route::get('/', 'MainController@index');
 // Route::get('/store', '');
 Route::get('/store', [
 	'uses' => 'StoreController@index',

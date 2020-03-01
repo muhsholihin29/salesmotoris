@@ -13,14 +13,17 @@ class Store extends Migration
      */
     public function up()
     {
-        Schema::create('stores', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('name',20);
-            $table->char('address',30);
-            $table->char('coordinate',60);
-            $table->integer('status',1);         
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('stores')) {
+            Schema::create('stores', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_sales');
+                $table->char('name',20);
+                $table->char('address',30);
+                $table->char('coordinate',60);
+                $table->integer('status');         
+                $table->timestamps();
+            });
+        }
     }
 
     /**

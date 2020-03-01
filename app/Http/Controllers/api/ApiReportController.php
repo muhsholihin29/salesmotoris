@@ -17,8 +17,8 @@ class ApiReportController extends Controller
 		$yesterday = date_add(date_create($today),date_interval_create_from_date_string("-1 days"))->format('Y-m-d');
 
 		if (date('D', strtotime($today)) == 'Sat' || date('D', strtotime($today)) == 'Sun') {
-			$today = date("Y-m-d", strtotime('thursday this week')); 
-			$yesterday = date("Y-m-d", strtotime('wednesday this week')); 
+			$today = date("Y-m-d", strtotime('friday this week')); 
+			$yesterday = date("Y-m-d", strtotime('thursday this week')); 
 		}
 		else if (date('D', strtotime($yesterday)) == ('Sun')) {
 			$yesterday = date_add(date_create($today),date_interval_create_from_date_string("-3 days"))->format('Y-m-d');
@@ -46,6 +46,7 @@ class ApiReportController extends Controller
 			}
 			$data[$i] = [
 				'days' =>  $this->getDayName(date('w', strtotime($days[$i]))),
+				'date' => $days[$i],
 				'total_income' => $total_income,
 				'completed_visitation' => $completed_visitation					
 			];

@@ -24,7 +24,7 @@ Route::prefix('v2')->group(function () {
 });
 
 Route::
-middleware('auth:api')->
+// middleware('auth:api')->
 prefix('v2')->group(function () {
 	Route::prefix('store')->group(function () {
 		Route::get('/', 'api\ApiStoreController@index');
@@ -54,6 +54,11 @@ prefix('v2')->group(function () {
 	});
 	Route::prefix('report')->group(function () {
 		Route::get('/', 'api\ApiReportController@index');
+		Route::get('/monthly', 'api\ApiReportController@monthly');
+		// Route::post('/', 'api\ApiReportController@update');
+	});
+	Route::prefix('target')->group(function () {
+		Route::get('/', 'api\ApiTargetController@index');
 		Route::get('/monthly', 'api\ApiReportController@monthly');
 		// Route::post('/', 'api\ApiReportController@update');
 	});

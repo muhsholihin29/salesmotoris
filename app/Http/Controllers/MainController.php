@@ -8,6 +8,7 @@ class MainController extends Controller
 {
     function index(Request $request)
     {
+        echo password_hash('adminadmin', PASSWORD_DEFAULT);
         $week = date_create(date("Y-m-d", strtotime('monday this week'))); 
         // $week = date_create("2013-03-15");
 

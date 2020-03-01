@@ -10,8 +10,11 @@ class ApiAuthController extends Controller
 {
 	function login(Request $request)
 	{
-		$user = \App\User::select('id', 'api_token', 'username', 'email', 'password', 'level')->where('username','=', $request->username)->get();        
-		if (password_verify($request->password, $user[0]['password']) && $request->level == $user[0]['level']) {
+		$user = \App\User::select('id', 'api_token', 'username', 'email', 'password', 'level')
+		->where('username','=', $request->username)
+		->where('level','=', $request->level)->first();   
+		// echo($request->level)     ;
+		if (password_verify($request->password, $user['password'])) {
 			$meta = [
 				'code' => Response::HTTP_OK, 
 				'message' => 'Success'

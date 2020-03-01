@@ -59,9 +59,19 @@ class ApiTransactionController extends Controller
 		$detail_transaction = $request->detail_transaction;
 		foreach ($detail_transaction as $i=>$value) {
 			$detail_transaction[$i]['id_transaction'] = $request->transaction_id;
+			$stock = \App\Stock::where('id', $value['id_product'])->first();
+			$updateStock = \App\Stock::where('id', $value['id_product'])->update(['quantity' => $stock->quantity-$value['quantity']]);
+			// echo($stock->quantity);
+			if (!$updateStock) {
+				return response()->json([
+					'code' => Response::HTTP_METHOD_FAILURE, 
+					'message' => 'Gagal disimpan'
+				]);
+			}
 		}
 		$insert = \App\DetailTransaction::insert($detail_transaction);
 		$update = \App\Transaction::where('id', $request->transaction_id)->update($transaction);
+
 		if (!$update || !$insert) {
 			return response()->json([
 				'code' => Response::HTTP_METHOD_FAILURE, 

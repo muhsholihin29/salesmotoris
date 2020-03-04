@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TargetProduct extends Model
+class ProductFocus extends Model
 {
-    protected $table = 'target_product';
+    protected $table = 'product_focus';
     protected $fillable = ['id_sales','id_product','target'];
 }

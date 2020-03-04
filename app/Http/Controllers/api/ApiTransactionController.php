@@ -10,23 +10,32 @@ class ApiTransactionController extends Controller
 {
 	function index(Request $request)
 	{
-		if ($request->has('day')){
-			$transaction = \App\Transaction::select('transactions.id', 'visitation.days', 'stores.name AS store', 'stores.address', 'transactions.total_income', 'transactions.total_items', 'transactions.visitation_status')
-			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
-			->join('stores', 'stores.id', '=', 'visitation.id_store')
-			->where('visitation.days','=', $request->day)
-			->get();
+		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
+		$transaction = \App\Transaction::select('transactions.id', 'stores.name AS store', 'stores.address', 'transactions.total_income', 'transactions.total_items', 'transactions.visitation_status')
+		->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+		->join('stores', 'stores.id', '=', 'visitation.id_store')
+		->where('visitation.days','=', $todayName)
+		->whereDate('transactions.created_at','=', date('Y-m-d'))
+		->get();
 
+		if (count($transaction) == 0) {
+			$meta = [
+				'code' => Response::HTTP_NOT_FOUND, 
+				'message' => 'Data tidak ada'
+			];
+			// return response()->json(['meta' => $meta]);
+			$transaction = 'Tidak ada transaksi';
+		}else{
 			$meta = [
 				'code' => Response::HTTP_OK, 
 				'message' => 'Success'
 			];
-			$data = [
-				'day' => $request->day,
-				'transaction' => $transaction
-			];
-			return response()->json(['meta' => $meta, 'data' => $data]);
 		}
+		$data = [
+			'day' => $todayName,
+			'transaction' => $transaction
+		];
+		return response()->json(['meta' => $meta, 'data' => $data]);
 	}
 
 	function getDetail(Request $request, $id)
@@ -50,38 +59,83 @@ class ApiTransactionController extends Controller
 
 	function update(Request $request)
 	{
-		$transaction = [
-			'total_income' => $request->total_income,
-			'total_items' => $request->total_items,
-			'visitation_status' => 'DONE'
-		];
-		
-		$detail_transaction = $request->detail_transaction;
-		foreach ($detail_transaction as $i=>$value) {
-			$detail_transaction[$i]['id_transaction'] = $request->transaction_id;
-			$stock = \App\Stock::where('id', $value['id_product'])->first();
-			$updateStock = \App\Stock::where('id', $value['id_product'])->update(['quantity' => $stock->quantity-$value['quantity']]);
+		echo($request->total_items);
+		if ($request->hasFile('image')) {
+			$image = $request->file('image');  
+			$destination_path = public_path('/transaction_image');
+			$name = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
+			$image->move($destination_path, $name);
+
+			$transaction = [
+				'total_income' => $request->total_income,
+				'total_items' => $request->total_items,
+				'visitation_status' => 'DONE',
+				'image' => $name
+			];
+
+			$detail_transaction = (json_decode($request->detail_transaction, true));
+			foreach ($detail_transaction as $i=>$value) {
+				$detail_transaction[$i]['id_transaction'] = $request->transaction_id;
+				$stock = \App\Stock::where('id_product', $value['id_product'])
+				->where('id_sales', $request->id_sales)->first();
+				$updateStock = \App\Stock::where('id_product', $value['id_product'])
+				->where('id_sales', $request->id_sales)
+				->update(['quantity' => $stock->quantity-$value['quantity']]);
 			// echo($stock->quantity);
-			if (!$updateStock) {
+				if (!$updateStock) {
+					return response()->json([
+						'code' => Response::HTTP_OK, 
+						'message' => $detail_transaction[$i]['id_product']
+					]);
+				}
+			}
+			$insert = \App\DetailTransaction::insert($detail_transaction);
+			$update = \App\Transaction::where('id', $request->transaction_id)->update($transaction);
+
+			if (!$update || !$insert) {
 				return response()->json([
 					'code' => Response::HTTP_METHOD_FAILURE, 
 					'message' => 'Gagal disimpan'
 				]);
 			}
+			$meta = [
+				'code' => Response::HTTP_OK, 
+				'message' => 'Success'
+			];
+		}else{
+			$meta = [
+				'code' => Response::HTTP_OK, 
+				'message' => 'gagal'
+			];
+			
 		}
-		$insert = \App\DetailTransaction::insert($detail_transaction);
-		$update = \App\Transaction::where('id', $request->transaction_id)->update($transaction);
+		return response()->json(['meta' => $request->total_items]);
+	}
 
-		if (!$update || !$insert) {
-			return response()->json([
-				'code' => Response::HTTP_METHOD_FAILURE, 
-				'message' => 'Gagal disimpan'
-			]);
+	function create(Request $request)
+	{
+		
+	}
+
+	function getDayName($dayOfWeek) {
+
+		switch ($dayOfWeek){
+			case 0:
+			return 'Minggu';
+			case 1:
+			return 'Senin';
+			case 2:
+			return 'Selasa';
+			case 3:
+			return 'Rabu';
+			case 4:
+			return 'Kamis';
+			case 5:
+			return 'Jumat';
+			case 6:
+			return 'Sabtu';
+			default:
+			return '';
 		}
-		$meta = [
-			'code' => Response::HTTP_OK, 
-			'message' => 'Success'
-		];
-		return response()->json(['meta' => $meta]);
 	}
 }

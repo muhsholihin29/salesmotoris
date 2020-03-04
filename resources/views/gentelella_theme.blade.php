@@ -7,9 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>LSP MSDM Universal | {{$data['title']}}</title>
+  <title>Sales Motoris | {{$data['title']}}</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.ico')}}"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <!-- Font Awesome -->
@@ -42,7 +42,7 @@
       <div class="col-md-3 left_col menu_fixed">
         <div class="left_col scroll-view">
           <div class="navbar nav_title" style="border: 0;">
-            <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>LSP MSDM Universal</span></a>
+            <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Sales Motoris</span></a>
           </div>
 
           <div class="clearfix"></div>
@@ -66,41 +66,26 @@
             <div class="menu_section">
               <h3>General</h3>
               <ul class="nav side-menu">
-                <li><a href="{{url('/')}}/dashboard"><i class="fa fa-tachometer"></i> Dashboard</a>
+                <li><a href="{{url('/')}}"><i class="fa fa-tachometer"></i> Dashboard</a>
                 </li>
-                <li><a><i class="fa fa-edit"></i> Beranda <span class="fa fa-chevron-down"></span></a>
+                <li><a><i class="fa fa-edit"></i> Target <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/admin/slide">Slide</a></li>
-                    <li><a href="{{url('/')}}/admin/testimoni">Testimoni</a></li>
-                    <li><a href="{{url('/')}}/admin/pendukung">Pendukung</a></li>
+                    <li><a href="{{url('/')}}/target-income">Omset</a></li>
+                    <li><a href="{{url('/')}}/target-effective-call">Effektif Call</a></li>
+                    <li><a href="{{url('/')}}/target-focus-product">Produk Fokus</a></li>
                   </ul>
                 </li>
-                <li><a><i class="fa fa-edit"></i> Profil <span class="fa fa-chevron-down"></span></a>
+                <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
+                </li>
+                <li><a href="{{url('/')}}/store"><i class="fa fa-tachometer"></i> Toko</a>
+                </li>
+                <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/admin/visi_misi">Visi dan Misi</a></li>
-                    <li><a href="{{url('/')}}/admin/identitas">Identitas</a></li>
-                    <li><a href="{{url('/')}}/admin/tentang">Tentang</a></li>               
+                    <li><a href="{{url('/')}}/report-transaction">Transaksi</a></li>
+                    <li><a href="{{url('/')}}/report-store">Toko</a></li>
+                    <li><a href="{{url('/')}}/report-sales">Sales</a></li>              
                   </ul>
                 </li>
-                <li><a><i class="fa fa-edit"></i> Info LSP <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/admin/asesor">Asesor</a></li>
-                    <li><a href="{{url('/')}}/admin/tempat_uji">Tempat Uji</a></li>
-                    <li><a href="{{url('/')}}/admin/struktur">Struktur</a></li>              
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-desktop"></i> Uji Kompetensi <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">                    
-                    <li><a href="{{url('/')}}/admin/ujikompetensi">Soal Uji Komptensi</a></li>
-                    <li><a href="{{url('/')}}/admin/hasil-uji">Hasil Uji Komptensi</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-users"></i> Peserta Sertifikasi <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/admin/pendaftaran">Peserta</a></li>
-                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>
-                  </ul>
-                </li>                
               </ul>
             </div>            
           </div>

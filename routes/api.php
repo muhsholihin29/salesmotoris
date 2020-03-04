@@ -43,7 +43,7 @@ prefix('v2')->group(function () {
 	Route::prefix('transaction')->group(function () {
 		Route::get('/', 'api\ApiTransactionController@index');
 		Route::get('{id}', 'api\ApiTransactionController@getDetail');
-		Route::put('/', 'api\ApiTransactionController@update');
+		Route::post('/', 'api\ApiTransactionController@update');
 		Route::get('{id}/edit', 'api\ApiTransactionController@edit');
 		// Route::put('{id}', 'api\ApiTransactionController@update');
 		Route::delete('{id}', 'api\ApiTransactionController@delete');
@@ -59,7 +59,7 @@ prefix('v2')->group(function () {
 	});
 	Route::prefix('target')->group(function () {
 		Route::get('/', 'api\ApiTargetController@index');
-		Route::get('/monthly', 'api\ApiReportController@monthly');
+		Route::get('/monthly', 'api\ApiTargetController@monthly');
 		// Route::post('/', 'api\ApiReportController@update');
 	});
 });

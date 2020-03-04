@@ -13,12 +13,12 @@ class Target extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('target_product')) {
-            Schema::create('target_product', function (Blueprint $table) {
+        if (!Schema::hasTable('target')) {
+            Schema::create('target', function (Blueprint $table) {
                 $table->bigIncrements('id')->unsigned();
                 $table->integer('id_sales');
-                $table->integer('id_product');
-                $table->integer('target');
+                $table->double('target_omset');
+                $table->integer('target_eff_call');
                 $table->timestamps();
             });
         }

@@ -11,31 +11,60 @@ class ApiTransactionController extends Controller
 	function index(Request $request)
 	{
 		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		$transaction = \App\Transaction::select('transactions.id', 'stores.name AS store', 'stores.address', 'transactions.total_income', 'transactions.total_items', 'transactions.visitation_status')
-		->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+		// $todayName = 'Senin';
+
+		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
+		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 		->join('stores', 'stores.id', '=', 'visitation.id_store')
-		->where('visitation.days','=', $todayName)
-		->whereDate('transactions.created_at','=', date('Y-m-d'))
+		->where('days','=', $todayName)
+		// ->whereDate('transactions.created_at','=', date('Y-m-d'))
 		->get();
 
-		if (count($transaction) == 0) {
-			$meta = [
-				'code' => Response::HTTP_NOT_FOUND, 
-				'message' => 'Data tidak ada'
-			];
-			// return response()->json(['meta' => $meta]);
-			$transaction = 'Tidak ada transaksi';
-		}else{
-			$meta = [
-				'code' => Response::HTTP_OK, 
-				'message' => 'Success'
-			];
+		foreach ($visitation as $i=>$vis) {
+			$idVisit = $vis->id;
+			$transaction = \App\Transaction::where('id_visitation', $vis->id)
+			->whereDate('created_at','=', date('Y-m-d'))
+			->first();
+			// return response()->json(['data' => $visitation]);
+			if ($transaction['total_income'] > 0) {
+				$vis->id = $transaction['id'];
+				$vis->total_income = $transaction['total_income'];
+				$vis->total_items = $transaction['total_items'];
+				$vis->id_visitation = $idVisit;
+				$vis->visitation_status = 'DONE';				
+			}else{
+				$vis->id = 0;
+				$vis->total_income = 0;
+				$vis->total_items = 0;
+				$vis->id_visitation = $idVisit;
+				$vis->visitation_status = 'NOT_YET';
+			}
+
+			unset($vis['id_store']);
 		}
-		$data = [
-			'day' => $todayName,
-			'transaction' => $transaction
+		// return response()->json(['meta' => $meta, 'data' => $data]);
+
+		
+
+		// if (count($transaction) == 0) {
+		// 	$meta = [
+		// 		'code' => Response::HTTP_NOT_FOUND, 
+		// 		'message' => 'Data tidak ada'
+		// 	];
+		// 	// return response()->json(['meta' => $meta]);
+		// 	$transaction = 'Tidak ada transaksi';
+		// }else{
+
+		// }
+		$meta = [
+			'code' => Response::HTTP_OK, 
+			'message' => 'Success'
 		];
-		return response()->json(['meta' => $meta, 'data' => $data]);
+		// $data = [
+		// 	'day' => $todayName,
+		// 	'transaction' => $transaction
+		// ];
+		return response()->json(['meta' => $meta, 'data' => $visitation]);
 	}
 
 	function getDetail(Request $request, $id)
@@ -66,16 +95,26 @@ class ApiTransactionController extends Controller
 			$name = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
 			$image->move($destination_path, $name);
 
-			$transaction = [
+			$dataTransaction = [
+				'id_sales' => $request->id_sales,
+				'id_visitation' => $request->id_visitation,
 				'total_income' => $request->total_income,
 				'total_items' => $request->total_items,
 				'visitation_status' => 'DONE',
 				'image' => $name
 			];
 
+			if ($request->transaction_id == 0) {
+				$transaction = \App\Transaction::insertGetId($dataTransaction);
+				$transaction_id = $transaction;
+			}else{
+				$transaction = \App\Transaction::where('id', $request->transaction_id)->update($dataTransaction);
+				$transaction_id = $request->transaction_id;
+			}
+
 			$detail_transaction = (json_decode($request->detail_transaction, true));
 			foreach ($detail_transaction as $i=>$value) {
-				$detail_transaction[$i]['id_transaction'] = $request->transaction_id;
+				$detail_transaction[$i]['id_transaction'] = $transaction_id;
 				$stock = \App\Stock::where('id_product', $value['id_product'])
 				->where('id_sales', $request->id_sales)->first();
 				$updateStock = \App\Stock::where('id_product', $value['id_product'])
@@ -89,10 +128,9 @@ class ApiTransactionController extends Controller
 					]);
 				}
 			}
+			
 			$insert = \App\DetailTransaction::insert($detail_transaction);
-			$update = \App\Transaction::where('id', $request->transaction_id)->update($transaction);
-
-			if (!$update || !$insert) {
+			if (!$transaction || !$insert) {
 				return response()->json([
 					'code' => Response::HTTP_METHOD_FAILURE, 
 					'message' => 'Gagal disimpan'

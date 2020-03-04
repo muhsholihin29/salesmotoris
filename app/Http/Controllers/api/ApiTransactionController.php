@@ -59,7 +59,7 @@ class ApiTransactionController extends Controller
 
 	function update(Request $request)
 	{
-		echo($request->total_items);
+		
 		if ($request->hasFile('image')) {
 			$image = $request->file('image');  
 			$destination_path = public_path('/transaction_image');
@@ -84,8 +84,8 @@ class ApiTransactionController extends Controller
 			// echo($stock->quantity);
 				if (!$updateStock) {
 					return response()->json([
-						'code' => Response::HTTP_OK, 
-						'message' => $detail_transaction[$i]['id_product']
+						'code' => Response::HTTP_METHOD_FAILURE, 
+						'message' => 'Gagal disimpan'
 					]);
 				}
 			}
@@ -109,7 +109,7 @@ class ApiTransactionController extends Controller
 			];
 			
 		}
-		return response()->json(['meta' => $request->total_items]);
+		return response()->json(['meta' => $meta]);
 	}
 
 	function create(Request $request)

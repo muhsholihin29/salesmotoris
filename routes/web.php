@@ -27,6 +27,12 @@ Route::middleware('auth')->group(function () {
 	Route::put('/product/{id}', 'ProductController@update');
 	Route::delete('/product/', 'ProductController@delete');
 
+	Route::get('/visitation', 'VisitationController@index');
+	Route::post('/visitation', 'VisitationController@addUpdate');
+	Route::get('/visitation/{id}/edit', 'VisitationController@getEdit');
+	Route::put('/visitation/{id}', 'VisitationController@update');
+	Route::delete('/visitation/', 'VisitationController@delete');
+
 	Route::group(['prefix' => 'target'], function(){
 		Route::get('/', 'TargetController@index');
 		Route::post('/', 'TargetController@update');
@@ -42,7 +48,10 @@ Route::middleware('auth')->group(function () {
 
 	Route::group(['prefix' => 'report'], function(){
 		Route::get('/', 'ReportController@index');
-		
+
+		Route::get('/store', 'ReportController@store');
+		Route::get('/product', 'ReportController@product');
+
 		Route::post('product-focus', 'TargetController@prFocusAddUpdate');
 		Route::get('product-focus/{id}/edit', 'TargetController@prFocusGetEdit');
 		Route::put('product-focus/{id}', 'TargetController@update');

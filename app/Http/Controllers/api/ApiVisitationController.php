@@ -17,6 +17,7 @@ class ApiVisitationController extends Controller
 			$visitation = \App\Visitation::select('stores.name AS stores')
 			->join('stores', 'stores.id', '=', 'visitation.id_store')
 			->where('visitation.days','=', $d)
+			->where('visitation.id_sales','=', $request->id_sales)
 			->get()->toArray();
 
 			$data->$d = array_column($visitation, 'stores');

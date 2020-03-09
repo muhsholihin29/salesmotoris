@@ -11,7 +11,7 @@ class ApiStockController extends Controller
     function index(Request $request)
     {
 
-    	$stock = \App\StockSales::select('products.name AS product', 'products.price', 'stock.quantity')->join('products', 'products.id', '=', 'stock.id_product')
+    	$stock = \App\StockSales::select('products.name AS product', 'products.price', 'stock_sales.quantity')->join('products', 'products.id', '=', 'stock_sales.id_product')
         ->where('id_sales', $request->id_sales)->get();
         $meta = [
             'code' => Response::HTTP_OK, 

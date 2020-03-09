@@ -69,16 +69,13 @@
               <ul class="nav side-menu">
                 <li><a href="{{url('/')}}"><i class="fa fa-tachometer"></i> Dashboard</a>
                 </li>
-                <li><a><i class="fa fa-edit"></i> Target <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/target">Omset</a></li>
-                    <li><a href="{{url('/')}}/target/effective-call">Effektif Call</a></li>
-                    <li><a href="{{url('/')}}/target/focus-product">Produk Fokus</a></li>
-                  </ul>
+                <li><a href="{{url('/')}}/target"><i class="fa fa-tachometer"></i> Target</a>
                 </li>
                 <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
                 </li>
                 <li><a href="{{url('/')}}/store"><i class="fa fa-tachometer"></i> Toko</a>
+                </li>
+                <li><a href="{{url('/')}}/visitation"><i class="fa fa-tachometer"></i> Kunjungan</a>
                 </li>
                 <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">

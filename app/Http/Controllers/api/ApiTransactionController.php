@@ -11,7 +11,7 @@ class ApiTransactionController extends Controller
 	function index(Request $request)
 	{
 		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		// $todayName = 'Senin';
+		// $todayName = 'Rabu';
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
@@ -115,9 +115,9 @@ class ApiTransactionController extends Controller
 			$detail_transaction = (json_decode($request->detail_transaction, true));
 			foreach ($detail_transaction as $i=>$value) {
 				$detail_transaction[$i]['id_transaction'] = $transaction_id;
-				$stock = \App\Stock::where('id_product', $value['id_product'])
+				$stock = \App\StockSales::where('id_product', $value['id_product'])
 				->where('id_sales', $request->id_sales)->first();
-				$updateStock = \App\Stock::where('id_product', $value['id_product'])
+				$updateStock = \App\StockSales::where('id_product', $value['id_product'])
 				->where('id_sales', $request->id_sales)
 				->update(['quantity' => $stock->quantity-$value['quantity']]);
 			// echo($stock->quantity);

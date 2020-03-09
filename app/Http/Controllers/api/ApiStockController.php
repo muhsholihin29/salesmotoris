@@ -11,7 +11,7 @@ class ApiStockController extends Controller
     function index(Request $request)
     {
 
-    	$stock = \App\Stock::select('products.name AS product', 'products.price', 'stock.quantity')->join('products', 'products.id', '=', 'stock.id_product')
+    	$stock = \App\StockSales::select('products.name AS product', 'products.price', 'stock.quantity')->join('products', 'products.id', '=', 'stock.id_product')
         ->where('id_sales', $request->id_sales)->get();
         $meta = [
             'code' => Response::HTTP_OK, 
@@ -22,7 +22,7 @@ class ApiStockController extends Controller
 
     function update(Request $request) 
     { 
-        $currentStock = \App\Stock::where('id', $request->product_id)->first(); 
+        $currentStock = \App\StockSales::where('id', $request->product_id)->first(); 
         $updatedStock = $currentStock['quantity'] - $request->number_of_fetches; 
         $stock = \App\Stock::where('id', $request->product_id)->update(['quantity' => $updatedStock]); 
         if ($stock) { 

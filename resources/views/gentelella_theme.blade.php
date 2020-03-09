@@ -34,6 +34,7 @@
 
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
 </head>
 
 <body class="nav-md">
@@ -70,9 +71,9 @@
                 </li>
                 <li><a><i class="fa fa-edit"></i> Target <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/target-income">Omset</a></li>
-                    <li><a href="{{url('/')}}/target-effective-call">Effektif Call</a></li>
-                    <li><a href="{{url('/')}}/target-focus-product">Produk Fokus</a></li>
+                    <li><a href="{{url('/')}}/target">Omset</a></li>
+                    <li><a href="{{url('/')}}/target/effective-call">Effektif Call</a></li>
+                    <li><a href="{{url('/')}}/target/focus-product">Produk Fokus</a></li>
                   </ul>
                 </li>
                 <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
@@ -81,9 +82,9 @@
                 </li>
                 <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/report-transaction">Transaksi</a></li>
-                    <li><a href="{{url('/')}}/report-store">Toko</a></li>
-                    <li><a href="{{url('/')}}/report-sales">Sales</a></li>              
+                    <li><a href="{{url('/')}}/report">Sales</a></li>
+                    <li><a href="{{url('/')}}/report/store">Toko</a></li>
+                    <li><a href="{{url('/')}}/report/product">Produk</a></li>              
                   </ul>
                 </li>
               </ul>

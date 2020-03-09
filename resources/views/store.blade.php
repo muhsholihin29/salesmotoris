@@ -117,7 +117,7 @@
 
 <!-- /page content-->
 
-<script src="{{asset('js/views/store.js')}}"></script>
+<script src="{{asset('resources/js/views/store.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
 async defer></script>
 <script type="text/javascript">

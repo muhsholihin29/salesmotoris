@@ -24,7 +24,7 @@ Route::prefix('v2')->group(function () {
 });
 
 Route::
-// middleware('auth:api')->
+middleware('auth:api')->
 prefix('v2')->group(function () {
 	Route::prefix('store')->group(function () {
 		Route::get('/', 'api\ApiStoreController@index');

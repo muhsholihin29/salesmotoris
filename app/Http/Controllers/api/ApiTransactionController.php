@@ -10,6 +10,7 @@ class ApiTransactionController extends Controller
 {
 	function index(Request $request)
 	{
+		return response()->json(['data' => 'tees']);
 		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
 		// $todayName = 'Rabu';
 

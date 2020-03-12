@@ -31,7 +31,7 @@ class ApiTransactionController extends Controller
 			->first();
 			// echo(json_encode($transaction))
 			// return response()->json(['data' => $visitation]);
-			if (empty($transaction) || $transaction['total_income'] > 0) {
+			if ($transaction == null || $transaction['total_income'] == 0) {
 				$vis->id = 0;
 				$vis->total_income = 0;
 				$vis->total_items = 0;

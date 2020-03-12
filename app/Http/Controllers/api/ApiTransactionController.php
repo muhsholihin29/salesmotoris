@@ -10,9 +10,10 @@ class ApiTransactionController extends Controller
 {
 	function index(Request $request)
 	{
-		// return response()->json(['data' => 'tees']);
+
 		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
 		// $todayName = 'Rabu';
+		return response()->json(['data' => $todayName]);
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')

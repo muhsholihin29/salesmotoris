@@ -21,11 +21,12 @@ class ApiTransactionController extends Controller
 		->where('days','=', $todayName)
 		->where('id_sales','=', $request->id_sales)
 		->get();
-		return response()->json(['data' => $visitation]);
+		
 
 		foreach ($visitation as $i=>$vis) {
 			$idVisit = $vis->id;
 			$transaction = \App\Transaction::where('id_visitation', $vis->id)
+			->where('id_sales','=', $request->id_sales)
 			->whereDate('created_at','=', date('Y-m-d'))
 			->first();
 			// return response()->json(['data' => $visitation]);
@@ -42,7 +43,7 @@ class ApiTransactionController extends Controller
 				$vis->id_visitation = $idVisit;
 				$vis->visitation_status = 'NOT_YET';
 			}
-
+			return response()->json(['data' => $visitation]);
 			unset($vis['id_store']);
 		}
 		// return response()->json(['meta' => $meta, 'data' => $data]);

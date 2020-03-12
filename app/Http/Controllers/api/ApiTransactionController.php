@@ -10,15 +10,14 @@ class ApiTransactionController extends Controller
 {
 	function index(Request $request)
 	{
-		// $todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		$todayName = 'Rabu';
+		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
+		// $todayName = 'Rabu';
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 		->join('stores', 'stores.id', '=', 'visitation.id_store')
 		->where('days','=', $todayName)
 		->where('id_sales','=', $request->id_sales)
-		// ->whereDate('transactions.created_at','=', date('Y-m-d'))
 		->get();
 
 		foreach ($visitation as $i=>$vis) {
@@ -45,26 +44,10 @@ class ApiTransactionController extends Controller
 		}
 		// return response()->json(['meta' => $meta, 'data' => $data]);
 
-		
-
-		// if (count($transaction) == 0) {
-		// 	$meta = [
-		// 		'code' => Response::HTTP_NOT_FOUND, 
-		// 		'message' => 'Data tidak ada'
-		// 	];
-		// 	// return response()->json(['meta' => $meta]);
-		// 	$transaction = 'Tidak ada transaksi';
-		// }else{
-
-		// }
 		$meta = [
 			'code' => Response::HTTP_OK, 
 			'message' => 'Success'
 		];
-		// $data = [
-		// 	'day' => $todayName,
-		// 	'transaction' => $transaction
-		// ];
 		return response()->json(['meta' => $meta, 'data' => $visitation]);
 	}
 
@@ -93,7 +76,7 @@ class ApiTransactionController extends Controller
 		if ($request->hasFile('image')) {
 			$image = $request->file('image');  
 			$destination_path = public_path('/transaction_image');
-			$name = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
+			$nameImg = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
 
 			$dataTransaction = [
 				'id_sales' => $request->id_sales,
@@ -101,21 +84,21 @@ class ApiTransactionController extends Controller
 				'total_income' => $request->total_income,
 				'total_items' => $request->total_items,
 				'visitation_status' => 'DONE',
-				'image' => $name
+				'image' => $nameImg
 			];
 
 			if ($request->transaction_id == 0) {
 				$transaction = \App\Transaction::create($dataTransaction)->id;
 				$transaction_id = $transaction;
-				$name = 'transaction-'.$transaction_id.".".$image->getClientOriginalExtension();
-				$transaction = \App\Transaction::where('id', $transaction_id)->update(['image' => $name]);
+				$nameImg = 'transaction-'.$transaction_id.".".$image->getClientOriginalExtension();
+				$transaction = \App\Transaction::where('id', $transaction_id)->update(['image' => $nameImg]);
 			}else{
 				$transaction = \App\Transaction::where('id', $request->transaction_id)->update($dataTransaction);
 				$transaction_id = $request->transaction_id;
 				$del_transaction = \App\DetailTransaction::where('id_transaction', $transaction_id)->delete();
 			}
 
-			$image->move($destination_path, $name);
+			$image->move($destination_path, $nameImg);
 			$detail_transaction = (json_decode($request->detail_transaction, true));
 			foreach ($detail_transaction as $i=>$value) {
 				$detail_transaction[$i]['id_transaction'] = $transaction_id;

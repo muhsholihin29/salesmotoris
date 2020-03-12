@@ -33,6 +33,13 @@ Route::middleware('auth')->group(function () {
 	Route::put('/visitation/{id}', 'VisitationController@update');
 	Route::delete('/visitation/', 'VisitationController@delete');
 
+	Route::get('/stock', 'StockController@index');
+	Route::get('/stock/{id}', 'StockController@getId');
+	Route::post('/stock', 'StockController@addUpdate');
+	Route::get('/stock/{id}/edit', 'StockController@getEdit');
+	Route::put('/stock/{id}', 'StockController@update');
+	Route::delete('/stock/', 'StockController@delete');
+
 	Route::group(['prefix' => 'target'], function(){
 		Route::get('/', 'TargetController@index');
 		Route::post('/', 'TargetController@update');

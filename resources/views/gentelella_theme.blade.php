@@ -72,6 +72,7 @@
                 <li><a href="{{url('/')}}/target"><i class="fa fa-tachometer"></i> Target</a>
                 </li>
                 <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
+                <li><a href="{{url('/')}}/stock"><i class="fa fa-tachometer"></i> Stok</a>
                 </li>
                 <li><a href="{{url('/')}}/store"><i class="fa fa-tachometer"></i> Toko</a>
                 </li>
@@ -79,9 +80,9 @@
                 </li>
                 <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
+                    <li><a href="{{url('/')}}/report/daily">Harian</a></li>
                     <li><a href="{{url('/')}}/report">Sales</a></li>
                     <li><a href="{{url('/')}}/report/store">Toko</a></li>
-                    <li><a href="{{url('/')}}/report/product">Produk</a></li>              
                   </ul>
                 </li>
               </ul>

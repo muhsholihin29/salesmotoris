@@ -67,14 +67,15 @@ class ApiReportController extends Controller
 		// return response()->json(['data' => date_create('1-'.$request->from)]);
 		// return date_create($request->from);
 
-		$mo = date_diff(date_create('1-'.$request->from), date_create('1-'.$request->to))->format('%m');
+		$mo = date_diff(date_create('1-'.$request->from), date_create('28-'.$request->to))->format('%m');
+		// return response()->json(['data' => $mo]);
 		
 		$fromMonth = $request->from;
 		$month = $from[0];
 		$year = $from[1];
 		// $request->to;
 		for ($i = 0; $i < $mo+1; $i++) {			
-			$report[$i] = \App\Transaction::select(DB::raw('SUM(total_income) AS income'), DB::raw('CAST(SUM(total_items) AS UNSIGNED) AS total_product'))
+			$report[$i] = \App\Transaction::select(DB::raw('SUM(total_income) AS income'), DB::raw('CAST(COUNT(total_items) AS UNSIGNED) AS total_transaction'))
 			->whereMonth('created_at','=', $month)
 			->whereYear('created_at','=', $year)
 			->where('id_sales', '=', $request->id_sales)

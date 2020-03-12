@@ -10,13 +10,14 @@ class ApiTransactionController extends Controller
 {
 	function index(Request $request)
 	{
-		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		// $todayName = 'Rabu';
+		// $todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
+		$todayName = 'Rabu';
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 		->join('stores', 'stores.id', '=', 'visitation.id_store')
 		->where('days','=', $todayName)
+		->where('id_sales','=', $request->id_sales)
 		// ->whereDate('transactions.created_at','=', date('Y-m-d'))
 		->get();
 
@@ -93,7 +94,6 @@ class ApiTransactionController extends Controller
 			$image = $request->file('image');  
 			$destination_path = public_path('/transaction_image');
 			$name = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
-			$image->move($destination_path, $name);
 
 			$dataTransaction = [
 				'id_sales' => $request->id_sales,
@@ -105,16 +105,21 @@ class ApiTransactionController extends Controller
 			];
 
 			if ($request->transaction_id == 0) {
-				$transaction = \App\Transaction::insertGetId($dataTransaction);
+				$transaction = \App\Transaction::create($dataTransaction)->id;
 				$transaction_id = $transaction;
+				$name = 'transaction-'.$transaction_id.".".$image->getClientOriginalExtension();
+				$transaction = \App\Transaction::where('id', $transaction_id)->update(['image' => $name]);
 			}else{
 				$transaction = \App\Transaction::where('id', $request->transaction_id)->update($dataTransaction);
 				$transaction_id = $request->transaction_id;
+				$del_transaction = \App\DetailTransaction::where('id_transaction', $transaction_id)->delete();
 			}
 
+			$image->move($destination_path, $name);
 			$detail_transaction = (json_decode($request->detail_transaction, true));
 			foreach ($detail_transaction as $i=>$value) {
 				$detail_transaction[$i]['id_transaction'] = $transaction_id;
+				$detail_transaction[$i]['created_at'] = date('Y-m-d H:i:s');
 				$stock = \App\StockSales::where('id_product', $value['id_product'])
 				->where('id_sales', $request->id_sales)->first();
 				$updateStock = \App\StockSales::where('id_product', $value['id_product'])

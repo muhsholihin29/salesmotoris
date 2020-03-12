@@ -43,9 +43,10 @@ class ApiTransactionController extends Controller
 				$vis->id_visitation = $idVisit;
 				$vis->visitation_status = 'NOT_YET';
 			}
-			return response()->json(['data' => $visitation]);
-			unset($vis['id_store']);
+
+			// unset($vis['id_store']);
 		}
+		return response()->json(['data' => $visitation]);
 		// return response()->json(['meta' => $meta, 'data' => $data]);
 
 		$meta = [

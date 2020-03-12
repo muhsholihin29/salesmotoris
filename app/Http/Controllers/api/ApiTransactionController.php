@@ -29,24 +29,25 @@ class ApiTransactionController extends Controller
 			->where('id_sales','=', $request->id_sales)
 			->whereDate('created_at','=', date('Y-m-d'))
 			->first();
+			// echo(json_encode($transaction))
 			// return response()->json(['data' => $visitation]);
-			if ($transaction['total_income'] > 0) {
-				$vis->id = $transaction['id'];
-				$vis->total_income = $transaction['total_income'];
-				$vis->total_items = $transaction['total_items'];
-				$vis->id_visitation = $idVisit;
-				$vis->visitation_status = 'DONE';				
-			}else{
+			if (empty($transaction) || $transaction['total_income'] > 0) {
 				$vis->id = 0;
 				$vis->total_income = 0;
 				$vis->total_items = 0;
 				$vis->id_visitation = $idVisit;
 				$vis->visitation_status = 'NOT_YET';
+			}else {
+				$vis->id = $transaction['id'];
+				$vis->total_income = $transaction['total_income'];
+				$vis->total_items = $transaction['total_items'];
+				$vis->id_visitation = $idVisit;
+				$vis->visitation_status = 'DONE';				
 			}
 
-			// unset($vis['id_store']);
+			unset($vis['id_store']);
 		}
-		return response()->json(['data' => $visitation]);
+		// return response()->json(['data' => $visitation]);
 		// return response()->json(['meta' => $meta, 'data' => $data]);
 
 		$meta = [

@@ -11,10 +11,13 @@ class Template {
     }
 
     public static function display_gentelella($template, $title, $dataContent) {
-        // if ($dataContent['request'] != '') {
+        if (!empty($dataContent['request']->user()->username)) {
             $data['username'] = $dataContent['request']->user()->username;
             $data['name'] = $dataContent['request']->user()->name;    
-        // }       
+        }else{
+            $data['username'] = "Anon";
+            $data['name'] = "Anon";
+        }       
         
         $data['content'] = view($template, ['data' => $dataContent]);
         // $this->_ci->load->view($template,$data,true);

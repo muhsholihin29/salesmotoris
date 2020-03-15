@@ -30,7 +30,7 @@ class ApiStoreController extends Controller
 
 	function create(Request $request)
 	{		
-		if (($request->lonCurrent && $request->lonStore && $request->latCurrent && $request->latStore) != ('' && null)) {
+		if (($request->lonCurrent && $request->lonStore && $request->latCurrent && $request->latStore) != '') {
 			$lonCurrent = ($request->lonCurrent);
 			$lonStore = ($request->lonStore);
 			$latCurrent = ($request->latCurrent);
@@ -42,7 +42,7 @@ class ApiStoreController extends Controller
 			$dist = rad2deg($dist);
 			$meter = round($dist * 60 * 1.1515 * 1609.344);
 			// return response()->json(['meta' => $request->lonCurrent]);
-			if ($meter <= 200) {
+			if ($meter <= 100) {
 				$store['name'] = $request->name;
 				$store['address'] = $request->address;
 				$store['coordinate'] = strval($request->latStore) . ', ' . strval($request->lonStore);			

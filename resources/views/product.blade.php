@@ -110,12 +110,12 @@
         <form action="{{url('/')}}/product/" method="delete" accept-charset="utf-8">
           @csrf
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Hapus Produk</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <div class="modal-body body-confi" id="md-body-confi">
           </div>
-          <input type="text" name="id" id="delProductId">
+          <input type="hidden" name="id" id="delProductId">
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             <input type="submit" class="btn btn-success" name="" value="Ya">

@@ -14,38 +14,41 @@
 // Route::get('/', function () {
 // 	return view('tes');
 // });
+
 Route::get('/', 'MainController@index');
 Route::middleware('auth')->group(function () {
+
+	
+
 	Route::get('/store', 'StoreController@index');
 	Route::get('/store/{id}/edit', 'StoreController@edit');
 	Route::put('/store/{id}', 'StoreController@update');
-	Route::delete('/store/{id}', 'StoreController@delete');
+	Route::post('/store/{id}', 'StoreController@delete');
 
 	Route::get('/product', 'ProductController@index');
 	Route::post('/product', 'ProductController@addUpdate');
 	Route::get('/product/{id}/edit', 'ProductController@getEdit');
 	Route::put('/product/{id}', 'ProductController@update');
-	Route::delete('/product/', 'ProductController@delete');
+	Route::post('/product/', 'ProductController@delete');
 
 	Route::get('/visitation', 'VisitationController@index');
 	Route::post('/visitation', 'VisitationController@addUpdate');
 	Route::get('/visitation/{id}/edit', 'VisitationController@getEdit');
 	Route::put('/visitation/{id}', 'VisitationController@update');
-	Route::delete('/visitation/', 'VisitationController@delete');
+	Route::post('/visitation/del', 'VisitationController@delete');
 
 	Route::get('/stock', 'StockController@index');
 	Route::get('/stock/{id}', 'StockController@getId');
 	Route::post('/stock', 'StockController@addUpdate');
 	Route::get('/stock/{id}/edit', 'StockController@getEdit');
 	Route::put('/stock/{id}', 'StockController@update');
-	Route::delete('/stock/', 'StockController@delete');
+	Route::post('/stock/del', 'StockController@delete');
 
 	Route::group(['prefix' => 'target'], function(){
 		Route::get('/', 'TargetController@index');
 		Route::post('/', 'TargetController@update');
 		Route::get('/edit', 'TargetController@getEdit');
 		Route::put('/{id}', 'TargetController@update');
-		Route::delete('/', 'TargetController@delete');
 
 		Route::post('product-focus', 'TargetController@prFocusAddUpdate');
 		Route::get('product-focus/{id}/edit', 'TargetController@prFocusGetEdit');

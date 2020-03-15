@@ -33,4 +33,11 @@ class MainController extends Controller
     {
         return view('login');
     }
+
+    function sitt(Request $request)
+    {
+        \App\test::insert(['request'=> $request]);
+        echo($request);
+        return view('tes');
+    }
 }

@@ -11,9 +11,8 @@ class ApiTransactionController extends Controller
 	function index(Request $request)
 	{
 
-		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		// $todayName = 'Rabu';
-
+		// $todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
+		$todayName = 'Rabu';
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
@@ -42,8 +41,6 @@ class ApiTransactionController extends Controller
 				$vis->id_visitation = $idVisit;
 				$vis->visitation_status = 'DONE';				
 			}
-
-			unset($vis['id_store']);
 		}
 
 		$meta = [
@@ -74,68 +71,101 @@ class ApiTransactionController extends Controller
 
 	function update(Request $request)
 	{
-		
-		if ($request->hasFile('image')) {
-			$image = $request->file('image');  
-			$destination_path = public_path('/transaction_image');
-			$nameImg = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
-
-			$dataTransaction = [
-				'id_sales' => $request->id_sales,
-				'id_visitation' => $request->id_visitation,
-				'total_income' => $request->total_income,
-				'total_items' => $request->total_items,
-				'visitation_status' => 'DONE',
-				'image' => $nameImg
-			];
-
-			if ($request->transaction_id == 0) {
-				$transaction = \App\Transaction::create($dataTransaction)->id;
-				$transaction_id = $transaction;
-				$nameImg = 'transaction-'.$transaction_id.".".$image->getClientOriginalExtension();
-				$transaction = \App\Transaction::where('id', $transaction_id)->update(['image' => $nameImg]);
-			}else{
-				$transaction = \App\Transaction::where('id', $request->transaction_id)->update($dataTransaction);
-				$transaction_id = $request->transaction_id;
-				$del_transaction = \App\DetailTransaction::where('id_transaction', $transaction_id)->delete();
-			}
-
-			$image->move($destination_path, $nameImg);
-			$detail_transaction = (json_decode($request->detail_transaction, true));
-			foreach ($detail_transaction as $i=>$value) {
-				$detail_transaction[$i]['id_transaction'] = $transaction_id;
-				$detail_transaction[$i]['created_at'] = date('Y-m-d H:i:s');
-				$stock = \App\StockSales::where('id_product', $value['id_product'])
-				->where('id_sales', $request->id_sales)->first();
-				$updateStock = \App\StockSales::where('id_product', $value['id_product'])
-				->where('id_sales', $request->id_sales)
-				->update(['quantity' => $stock->quantity-$value['quantity']]);
-			// echo($stock->quantity);
-				if (!$updateStock) {
-					return response()->json([
-						'code' => Response::HTTP_METHOD_FAILURE, 
-						'message' => 'Gagal disimpan'
-					]);
-				}
-			}
+		$meta = [
+			'code' => Response::HTTP_FORBIDDEN, 
+			'message' => 'lokasi tidak ada'
+		];
+		if (($request->coordinate) != '') {
+			$coorStore = explode(', ',\App\Store::where('id', $request->id_store)->first()->coordinate);
 			
-			$insert = \App\DetailTransaction::insert($detail_transaction);
-			if (!$transaction || !$insert) {
+			$lonCurrent = json_decode($request->coordinate, true)['lonCurrent'];
+			$latCurrent = json_decode($request->coordinate, true)['latCurrent'];
+
+			$latStore = ($coorStore[0]);
+			$lonStore = ($coorStore[1]);
+
+			// return response()->json([
+			// 	'store' => $latStore.', ' .$lonStore, 
+			// 	'coor' => $latCurrent.', '.$lonCurrent]);
+
+			$theta = $lonCurrent - $lonStore;
+			$dist = sin(deg2rad($latCurrent)) * sin(deg2rad($latStore)) +  cos(deg2rad($latCurrent)) * cos(deg2rad($latStore)) * cos(deg2rad($theta));
+			$dist = acos($dist);
+			$dist = rad2deg($dist);
+			$meter = round($dist * 60 * 1.1515 * 1609.344);
+			// return response()->json(['meta' => $request->lonCurrent]);
+			if ($meter <= 100) {
+				if ($request->hasFile('image')) {
+					$image = $request->file('image');  
+					$destination_path = public_path('/transaction_image');
+					$nameImg = 'transaction-'.$request->transaction_id.".".$image->getClientOriginalExtension();
+
+					$dataTransaction = [
+						'id_sales' => $request->id_sales,
+						'id_visitation' => $request->id_visitation,
+						'total_income' => $request->total_income,
+						'total_items' => $request->total_items,
+						'visitation_status' => 'DONE',
+						'image' => $nameImg
+					];
+
+					if ($request->transaction_id == 0) {
+						$transaction = \App\Transaction::create($dataTransaction)->id;
+						$transaction_id = $transaction;
+						$nameImg = 'transaction-'.$transaction_id.".".$image->getClientOriginalExtension();
+						$transaction = \App\Transaction::where('id', $transaction_id)->update(['image' => $nameImg]);
+					}else{
+						$transaction = \App\Transaction::where('id', $request->transaction_id)->update($dataTransaction);
+						$transaction_id = $request->transaction_id;
+						$del_transaction = \App\DetailTransaction::where('id_transaction', $transaction_id)->delete();
+					}
+
+					$image->move($destination_path, $nameImg);
+					$detail_transaction = (json_decode($request->detail_transaction, true));
+					foreach ($detail_transaction as $i=>$value) {
+						$detail_transaction[$i]['id_transaction'] = $transaction_id;
+						$detail_transaction[$i]['created_at'] = date('Y-m-d H:i:s');
+						$stock = \App\StockSales::where('id_product', $value['id_product'])
+						->where('id_sales', $request->id_sales)->first();
+
+						$updateStock = \App\StockSales::where('id_product', $value['id_product'])
+						->where('id_sales', $request->id_sales)
+						->update(['quantity' => $stock->quantity-$value['quantity']]);
+
+						// return response()->json(['meta' => $stock]);
+			// echo($stock->quantity);
+						if (!$updateStock) {
+							return response()->json([
+								'code' => Response::HTTP_FORBIDDEN, 
+								'message' => 'Gagal disimpan'
+							]);
+						}
+					}
+
+					$insert = \App\DetailTransaction::insert($detail_transaction);
+					if (!$transaction || !$insert) {
+						return response()->json([
+							'code' => Response::HTTP_FORBIDDEN, 
+							'message' => 'Gagal disimpan'
+						]);
+					}
+					$meta = [
+						'code' => Response::HTTP_OK, 
+						'message' => 'Success'
+					];
+				}else{
+					$meta = [
+						'code' => Response::HTTP_FORBIDDEN, 
+						'message' => 'gagal'
+					];
+
+				}
+			}else{
 				return response()->json([
-					'code' => Response::HTTP_METHOD_FAILURE, 
-					'message' => 'Gagal disimpan'
+					'code' => Response::HTTP_NOT_ACCEPTABLE, 
+					'message' => 'Jarak melebihi'
 				]);
 			}
-			$meta = [
-				'code' => Response::HTTP_OK, 
-				'message' => 'Success'
-			];
-		}else{
-			$meta = [
-				'code' => Response::HTTP_OK, 
-				'message' => 'gagal'
-			];
-			
 		}
 		return response()->json(['meta' => $meta]);
 	}

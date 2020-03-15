@@ -105,6 +105,11 @@
 	<a href="#myModal" class="trigger-btn" data-toggle="modal">Click to Open Confirm Modal</a>
 </div>
 
+<form action="http://103.126.10.39/sitb/Terdugatb/insert" method="post" accept-charset="utf-8">
+	<input type="text" name="nik" value="" placeholder="">
+	<input type="submit" name="submit" value="">
+</form>
+
 <!-- Modal HTML -->
 <div id="myModal" class="modal">
 	<div class="modal-dialog modal-confirm">

@@ -19,6 +19,13 @@
 	text-decoration: underline;
 }
 
+.btn-yellow {
+	color : #d39e00;
+	font-weight: 600;
+	font-size: unset;
+	text-decoration: underline;
+}
+
 #map { 
 	height: 400px;    
 	width: auto;            

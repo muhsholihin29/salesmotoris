@@ -47,3 +47,10 @@ function pnotify(title, text, type) {
       styling: 'bootstrap3'
   });
 }
+
+function delConfirm(id, name) {
+  var url = document.URL;
+  var idSales = url.substring(url.lastIndexOf('/') + 1);
+  document.getElementById('md-body-confi-del').innerHTML = 'Apakah anda yakin menghapus ' + name + '?';
+  $('#delStoreId').val(id);
+}

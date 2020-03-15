@@ -34,11 +34,12 @@ function delConfirm(id, name) {
 	$('#delSalesId').val(idSales);
 }
 
-$(document).ready(function(){  
+$(document).ready(function(){ 
+	$("#filSales").select2(); 
 	var url = document.URL;
 	var id = url.substring(url.lastIndexOf('/') + 1);
 	console.log(id);
 	if (id > 0) {
-		document.getElementById('filSales').value = id;
+		$('#filSales').select2("val", String(id));
 	}
 });

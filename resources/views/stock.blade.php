@@ -147,8 +147,8 @@
           </div>
           <div class="modal-body body-confi" id="md-body-confi">
           </div>
-          <input type="text" name="id" id="delStockId">
-          <input type="text" name="id_sales" id="delSalesId">
+          <input type="hidden" name="id" id="delStockId">
+          <input type="hidden" name="id_sales" id="delSalesId">
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             <input type="submit" class="btn btn-success" name="" value="Ya">
@@ -162,8 +162,6 @@
 
   @stack('scripts')
   <script src="{{asset('resources/js/views/stock.js')}}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
-  async defer></script>
   <script type="text/javascript">
     $(document).ready(function(){  
       $("#product").on("input", function(){

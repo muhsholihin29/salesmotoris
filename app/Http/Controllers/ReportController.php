@@ -47,7 +47,13 @@ class ReportController extends Controller
 	function store(Request $request)
 	{
 		$data['request'] = $request;
+		$data['store'] = \App\Store::select('users.id', 'users.name', DB::raw('COUNT(total_income) as eff_call'), DB::raw('SUM(total_income) AS income'))
+		->join('users', 'users.id', '=', 'transactions.id_sales')
+		->whereYear('transactions.created_at','=', date('Y'))
+		->whereMonth('transactions.created_at','=', date('m'))
+		->get();
 		$data['store'] = \App\Store::get();
+
 		if ($data['store']) {
 			return \Template::display_gentelella('report_store', 'Laporan Toko', $data);
 		}else{

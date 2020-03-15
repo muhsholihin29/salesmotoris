@@ -20,19 +20,27 @@ class StoreController extends Controller
 
 	function approve(Request $request)
 	{
-		\App\Store::where('id','=', $request->id)->update(['status' => 1]);
-		return redirect('store')->with('approve', 'Data');
+		$approve = \App\Store::where('id','=', $request->id)->update(['status' => 1]);
+		if ($approve) {
+			return redirect('store')->with('approve', 'Data');	
+		}else{
+			return redirect('store')->with('error', 'Data');
+		}
+		
 	}
 
-	function addStore(Request $request, $id)
+	function update(Request $request)
 	{
-		$user = \App\User::find(1);
-
-		// return $user->toJson();
-		echo($id);
+		
 	}
-	function zzz(Request $request)
+
+	function delete(Request $request)
 	{
-		// echo csrf_field();
+		$delete = \App\Store::where('id','=', $request->id)->delete();
+		if ($delete) {
+			return redirect('store')->with('del', 'Data');	
+		}else{
+			return redirect('store')->with('error', 'Data');
+		}
 	}
 }

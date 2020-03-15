@@ -16,7 +16,7 @@
 // });
 
 Route::get('/', 'MainController@index');
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
 
 	
 
@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/visitation', 'VisitationController@index');
 	Route::post('/visitation', 'VisitationController@addUpdate');
 	Route::get('/visitation/{id}/edit', 'VisitationController@getEdit');
-	Route::put('/visitation/{id}', 'VisitationController@update');
+	Route::get('/visitation/{id}', 'VisitationController@getId');
 	Route::post('/visitation/del', 'VisitationController@delete');
 
 	Route::get('/stock', 'StockController@index');
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
 		Route::put('product-focus/{id}', 'TargetController@update');
 		Route::post('product-focus/del', 'TargetController@prFocusDel');
 	});
-});
+// });
 // Route::group(['middleware' => 'api'], function () {
 	// Route::post('/api/crud/add-store', 'StoreController@addStore');
 // });

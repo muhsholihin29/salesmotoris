@@ -23,7 +23,8 @@ Route::get('/', 'MainController@index');
 	Route::get('/store', 'StoreController@index');
 	Route::get('/store/{id}/edit', 'StoreController@edit');
 	Route::put('/store/{id}', 'StoreController@update');
-	Route::post('/store/{id}', 'StoreController@delete');
+	Route::post('/store/del', 'StoreController@delete');
+	Route::post('/store/approve', 'StoreController@approve');
 
 	Route::get('/product', 'ProductController@index');
 	Route::post('/product', 'ProductController@addUpdate');

@@ -92,7 +92,7 @@
 <div class="modal fade modal-confi"tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
-      <form action="{{url('/')}}/store/crud/approve" method="post" accept-charset="utf-8">
+      <form action="{{url('/')}}/store/approve" method="post" accept-charset="utf-8">
         @csrf
         <div class="modal-header">
           <h4 class="modal-title" id="myModalLabel">Setujui Toko</h4>

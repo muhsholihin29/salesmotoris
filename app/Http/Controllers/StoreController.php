@@ -36,11 +36,11 @@ class StoreController extends Controller
 
 	function delete(Request $request)
 	{
-		$delete = \App\Store::where('id','=', $request->id)->delete();
-		if ($delete) {
-			return redirect('store')->with('del', 'Data');	
-		}else{
-			return redirect('store')->with('error', 'Data');
-		}
+		// $delete = \App\Store::where('id','=', $request->id)->delete();
+		// if ($delete) {
+		// 	return redirect('store')->with('del', 'Data');	
+		// }else{
+		// 	return redirect('store')->with('error', 'Data');
+		// }
 	}
 }

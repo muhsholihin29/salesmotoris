@@ -52,24 +52,20 @@
         <table class="table table-bordered table-striped" id="mytable">
           <thead>
             <tr><th width="80px"><center>No<center></th>
-              <th><center>Toko</center></th>
-              <th width="250px"><center>Total Transaksi</center></th>
+              <th><center>Nama</center></th>
+              <th width="130px"><center>Transaksi</center></th>
             </tr>
           </thead>
 
-          @foreach ($data['report_store'] as $key=>$st)
+          <?php foreach(json_encode($data['report_store']) as $st){ ?>
           <tr>
-            <td><center>{{$key+1}}</center></td>
-            <td><center>{{$st['store']}}</center></td>
+            <td><center><?php echo $st->store ?></center></td>
+            <td><center></center></td>
             <td><center>
-              @if($st['transactions'] <= 0)
-              Tidak ada transaksi
-              @else
-              {{$st['transactions']}}
-              @endif
+             
             </center></td>
           </tr>
-          @endforeach
+          <?php } ?>
         </table>
       </div>
     </div>
@@ -127,16 +123,9 @@
 
 <!-- /page content-->
 
-<script src="{{asset('resources/js/views/report.js')}}"></script>
+<script src="{{asset('resources/js/views/visit.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
 async defer></script>
 <script type="text/javascript">
 
-  @if (Session::has('approve'))
-  console.log("ini approve");
-  setTimeout(function() {
-    pnotify('Sukses', 'Toko berhasil disetujui','success');
-    console.log('aaaa');
-  }, 2000);
-  @endif
 </script>

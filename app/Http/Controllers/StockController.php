@@ -25,7 +25,7 @@ class StockController extends Controller
 		->join('products', 'products.id', '=', 'stock_sales.id_product')
 		->where('stock_sales.id_sales',$id)
 		->get();
-		$product = \App\product::select('products.id', 'products.name', 'stock_sales.id_product', 'stock_sales.id_sales')
+		$product = \App\Product::select('products.id', 'products.name', 'stock_sales.id_product', 'stock_sales.id_sales')
 		->join('stock_sales', 'stock_sales.id_product', '=', 'products.id')
 		->where('stock_sales.id_sales', '=', $id)
 		->get();

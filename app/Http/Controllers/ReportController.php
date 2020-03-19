@@ -37,6 +37,8 @@ class ReportController extends Controller
 
 		// echo(json_encode($data['target']));
 
+		$data['tgl_start'] = $request->get('tgl_start', 0);
+		$data['tgl_end'] = $request->get('tgl_end', 0);
 		if ($data['report']) {
 			return \Template::display_gentelella('report_sales', 'Target', $data);
 		}else{
@@ -49,20 +51,21 @@ class ReportController extends Controller
 		$data['request'] = $request;
 		$store = \App\Store::where('status', '1') //approved store
 		->get();
+		$dateStart = $request->get('date_start', date('Y-m-1'));
+		$dateEnd = $request->get('date_end', date('Y-m-d'));
 		// $data['store'] = \App\Store::get();
 		// echo(json_encode($store));
 		$data['report_store'] = [];
+		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
+		
 		foreach ($store as $st) {
-			
 			$report = \App\Transaction::select('stores.id as id_store', 'stores.name as store', DB::raw('COUNT(total_income) as transactions'))
 			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 			->join('stores', 'stores.id', '=', 'visitation.id_store')
-		// ->whereDate('transactions.created_at','=', date('Y-m-d'))
 			->where('id_store', $st->id)
 			->where('transactions.total_items', '>', 0)
+			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
 			->first();
-			// echo(json_encode($report));
-			// echo $st->id;
 			if ($report->id_store == null) {
 				$report = [
 					"id_store" => $st->id,
@@ -72,6 +75,7 @@ class ReportController extends Controller
 			}
 			array_push($data['report_store'], $report);
 		}
+		
 		
 		
 		// echo(json_encode($data['report_store']));
@@ -93,5 +97,28 @@ class ReportController extends Controller
 		}else{
 			return redirect('report_sales')->with('error', 'Data');
 		}	
+	}
+
+	function tanggal_indo($tanggal)
+	{
+		if ($tanggal != 0) {
+			
+			$bulan = array (1 =>   
+				'Januari',
+				'Februari',
+				'Maret',
+				'April',
+				'Mei',
+				'Juni',
+				'Juli',
+				'Agustus',
+				'September',
+				'Oktober',
+				'November',
+				'Desember'
+			);
+			$split = explode('-', $tanggal);
+			return $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
+		}
 	}
 }

@@ -6,7 +6,7 @@
 <div class="right_col" role="main">
   <div class="page-title">
     <div class="title_left">
-      <h3>Data Asesor</h3>
+      <h3>Laporan Toko</h3>
 
     </div>
 
@@ -25,13 +25,13 @@
           <h2><small>Filter Stok Sales</small></h2>
           <div class="clearfix"></div>
         </div>
-        <div class="form-group row">
+        <div class="x_content">
           <div class="item form-group row ">
               <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
-              <div class="col-md-3 col-sm-3">                  
+              <div class="col-md-4 col-sm-3">                  
                 <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
                   <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                  <span id="tanggal">December 30, 2018 - January 28, 2019</span> <b class="caret"></b>
+                  <span id="tanggal">{{$data['date_picker']}}</span> <b class="caret"></b>
                 </div>
               </div>
             </div>
@@ -124,13 +124,41 @@
 <!-- /Confirm Approve Modal -->   
 </div>
 </div>
-
 <!-- /page content-->
 
 <script src="{{asset('resources/js/views/report.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
 async defer></script>
 <script type="text/javascript">
+
+  function tgl(a, b) {
+    // document.body.innerHTML += '<form id="btn-number-action" action="pendaftaran" method="post">{{csrf_field()}}<input type="hidden" id="jtgl_start" name="tgl_start" value=""><input type="hidden" id="jtgl_end" name="tgl_end" value=""></form>';
+    
+    
+    $('#jtgl_start').val(a); 
+    $('#jtgl_end').val(b);     
+    // document.getElementById("btn-number-action").submit(); 
+  }
+
+  function funTglStart(){
+    console.log('funTglStart');
+    var start = $('#tgl_start').val();
+    if (start == 0) {
+      return 0;
+    }
+    var datearrayA = start.split("-");
+    // console.log("aaaaaaaa" + datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2]);
+    return datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2];
+  }
+
+  function funTglEnd(){    
+    var end = $('#tgl_start').val();
+    if (end == 0) {
+      return 0;
+    }
+    var datearrayB = end.split("-");    
+    return datearrayB[1] + '/' + datearrayB[0] + '/' + datearrayB[2];
+  }
 
   @if (Session::has('approve'))
   console.log("ini approve");
@@ -139,4 +167,6 @@ async defer></script>
     console.log('aaaa');
   }, 2000);
   @endif
+
+
 </script>

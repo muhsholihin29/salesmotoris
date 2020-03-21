@@ -11,8 +11,8 @@ class ApiTransactionController extends Controller
 	function index(Request $request)
 	{
 
-		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
-		// $todayName = 'Rabu';
+		// $todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
+		$todayName = 'Jumat';
 
 		$visitation = \App\Visitation::select('visitation.id', 'visitation.days', 'visitation.id_store', 'stores.name AS store', 'stores.address')
 		// ->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')

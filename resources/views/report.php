@@ -6,7 +6,7 @@
 <div class="right_col" role="main">
   <div class="page-title">
     <div class="title_left">
-      <h3>Data Asesor</h3>
+      <h3>Laporan Toko</h3>
 
     </div>
 
@@ -18,15 +18,19 @@
     </div>
   </div>
   <div class="clearfix"></div>
-  <div class="row">
+  <<div class="row">
     <div class="col-md-12 col-sm-12">
       <div class="x_panel">
         <div class="x_title">
-          <h2><small>Filter Stok Sales</small></h2>
+          <h2><small>Filter berdasarkan tanggal dan export excel</small></h2>
           <div class="clearfix"></div>
         </div>
-        <div class="form-group row">
-          <div class="item form-group row ">
+        <div class="x_content">  
+          <form action="pendaftaran" method="POST">
+            {{csrf_field()}}
+            <input type="hidden" id="jtgl_start" name="tgl_start">
+            <input type="hidden" id="jtgl_end" name="tgl_end">
+            <div class="item form-group row ">
               <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
               <div class="col-md-3 col-sm-3">                  
                 <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
@@ -35,7 +39,34 @@
                 </div>
               </div>
             </div>
+            <div class="item form-group row ">
+              <label class="control-label col-md-3 col-sm-3 label-align">Status Uji</label>
+              <div class="col-md-3 col-sm-4">                  
+                <select class="form-control" id="status_uji" name="status_uji">
+                  <option value="0">-Semua-</option>
+                  <option value="kompeten">Kompeten</option>
+                  <option value="tidak">Tidak Kompeten</option>            
+                </select>
 
+              </div>
+              <input type="submit" class="btn btn-primary" value="Cari">
+            </div>
+          </form>          
+          <div class="item form-group row ">
+            <div class="col-md-4 col-sm-4">                  
+
+            </div>
+          </div>
+          <div class="item form-group row ">
+            <div class="col-md-6 col-sm-6">                
+              <form action="pendaftaran/export" method="POST">
+                {{csrf_field()}} 
+                <input type="hidden" name="pendaftar" value="" placeholder="">
+                <button type="submit" class="btn btn-success">Export Excel</button>
+              </form>
+            </div> 
+          </div>
+          <a id="download" href="javascript:void(0);" download="cropped.png"></a>
         </div>
       </div>
     </div>
@@ -58,13 +89,13 @@
           </thead>
 
           <?php foreach(json_encode($data['report_store']) as $st){ ?>
-          <tr>
-            <td><center><?php echo $st->store ?></center></td>
-            <td><center></center></td>
-            <td><center>
-             
-            </center></td>
-          </tr>
+            <tr>
+              <td><center><?php echo $st->store ?></center></td>
+              <td><center></center></td>
+              <td><center>
+
+              </center></td>
+            </tr>
           <?php } ?>
         </table>
       </div>

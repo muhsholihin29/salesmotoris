@@ -180,7 +180,7 @@ class ApiTransactionController extends Controller
 				]);
 			}
 		}
-		return response()->json(['meta' => $meta]);
+		return response()->json($meta);
 	}
 
 	function create(Request $request)

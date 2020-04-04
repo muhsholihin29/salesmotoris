@@ -108,6 +108,19 @@ class ApiTransactionController extends Controller
 						'visitation_status' => 'DONE',
 						'image' => $nameImg
 					];
+					$detail_transaction = (json_decode($request->detail_transaction, true));
+					foreach ($detail_transaction as $i=>$value) {
+						$stock = \App\StockSales::where('id_product', $value['id_product'])
+						->where('id_sales', $request->id_sales)->first();
+						$product = \App\Product::where('id', $value['id_product'])->first();
+
+						if ($stock->quantity < $value['quantity']) {
+							return response()->json([
+								'code' => Response::HTTP_FORBIDDEN, 
+								'message' => $product->name.' stok hanya '.$stock->quantity
+							]);
+						}
+					}
 
 					if ($request->transaction_id == 0) {
 						$transaction = \App\Transaction::create($dataTransaction)->id;
@@ -121,7 +134,7 @@ class ApiTransactionController extends Controller
 					}
 
 					$image->move($destination_path, $nameImg);
-					$detail_transaction = (json_decode($request->detail_transaction, true));
+					
 					foreach ($detail_transaction as $i=>$value) {
 						$detail_transaction[$i]['id_transaction'] = $transaction_id;
 						$detail_transaction[$i]['created_at'] = date('Y-m-d H:i:s');

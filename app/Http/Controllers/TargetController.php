@@ -15,7 +15,7 @@ class TargetController extends Controller
 		->join('products', 'products.id', '=', 'target_product_focus.id_product')
 		->get();
 
-		$data['product'] = \App\product::select('products.id', 'products.name', 'target_product_focus.id_product')
+		$data['product'] = \App\Product::select('products.id', 'products.name', 'target_product_focus.id_product')
 		->join('target_product_focus', 'target_product_focus.id_product', '=', 'products.id', 'left outer')
 		->where('target_product_focus.id_product', '=', null)
 		->get();	

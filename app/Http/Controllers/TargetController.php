@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 
+
 class TargetController extends Controller
 {
 	function index(Request $request)

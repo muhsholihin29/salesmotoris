@@ -67,9 +67,7 @@
             <div class="menu_section">
               <h3>General</h3>
               <ul class="nav side-menu">
-                <li><a href="{{url('/')}}"><i class="fa fa-tachometer"></i> Dashboard</a>
-                </li>
-                <li><a href="{{url('/')}}/target"><i class="fa fa-tachometer"></i> Target</a>
+                <li><a href="{{url('/')}}/"><i class="fa fa-tachometer"></i> Target</a>
                 </li>
                 <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
                 <li><a href="{{url('/')}}/stock"><i class="fa fa-tachometer"></i> Stok</a>

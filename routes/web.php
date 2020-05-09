@@ -15,7 +15,8 @@
 // 	return view('tes');
 // });
 
-Route::get('/', 'MainController@index');
+// Route::get('/', 'MainController@index');
+Route::get('/', 'TargetController@index');
 // Route::middleware('auth')->group(function () {
 
 	
@@ -46,7 +47,7 @@ Route::get('/', 'MainController@index');
 	Route::post('/stock/del', 'StockController@delete');
 
 	Route::group(['prefix' => 'target'], function(){
-		Route::get('/', 'TargetController@index');
+		
 		Route::post('/', 'TargetController@update');
 		Route::get('/edit', 'TargetController@getEdit');
 		Route::put('/{id}', 'TargetController@update');

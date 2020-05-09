@@ -41,9 +41,9 @@ class TargetController extends Controller
 	{
 		$update = \App\Target::where('id','=', $request->id)->update($request->except(['_token']));
 		if ($update) {
-			return redirect('target')->with('update', 'Data');    
+			return redirect('/')->with('update', 'Data');    
 		}else{
-			return redirect('target')->with('error', 'Data');
+			return redirect('/')->with('error', 'Data');
 		} 
 	}
 
@@ -59,16 +59,16 @@ class TargetController extends Controller
 		if ($request->id > 0) {
             $update = \App\ProductFocus::where('id','=', $request->id)->update($request->except(['_token']));
             if ($update) {
-                return redirect('target')->with('update', 'Data');    
+                return redirect('/')->with('update', 'Data');    
             }else{
-                return redirect('target')->with('error', 'Data');
+                return redirect('/')->with('error', 'Data');
             } 
         }else{
             $add = \App\ProductFocus::create($request->except(['_token','id']));
             if ($add) {
-                return redirect('target')->with('add', 'Data');    
+                return redirect('/')->with('add', 'Data');    
             }else{
-                return redirect('target')->with('error', 'Data');
+                return redirect('/')->with('error', 'Data');
             }
 
         }
@@ -78,9 +78,9 @@ class TargetController extends Controller
 	{
 		$del = \App\ProductFocus::where('id','=', $request->id)->delete();
         if ($del) {
-            return redirect('target')->with('delete', 'Data');   
+            return redirect('/')->with('delete', 'Data');   
         }else{
-            return redirect('target')->with('error', 'Data');
+            return redirect('/')->with('error', 'Data');
         }
 	}
 }

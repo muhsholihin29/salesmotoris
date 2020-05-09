@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Visitation extends Model
 {
     protected $table = 'visitation';
-    protected $fillable = ['days','id_store'];
+    protected $fillable = ['days','id_store','id_sales'];
 }

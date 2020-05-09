@@ -16,27 +16,58 @@ class ReportController extends Controller
 		// ->whereYear('transactions.created_at','=', date('Y'))
 		// ->whereMonth('transactions.created_at','=', date('m'))
 		// ->get();
-
 		$data['target'] = \App\Target::first();
 
 		$data['report'] = \App\Transaction::select('users.id', 'users.name', DB::raw('COUNT(total_income) as eff_call'), DB::raw('SUM(total_income) AS income'))
+		->groupBy('users.id')
 		->join('users', 'users.id', '=', 'transactions.id_sales')
 		->whereYear('transactions.created_at','=', date('Y'))
 		->whereMonth('transactions.created_at','=', date('m'))
 		->get();
 
-		$data['pr_focus'] = \App\ProductFocus::select(DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
+		$data['target']->pr_focus = \App\ProductFocus::select('target_product_focus.id_product', 'target_product_focus.target', 'products.name AS product')
+		->join('products', 'products.id', '=', 'target_product_focus.id_product')->get();
+		$pr_focus_total = \App\ProductFocus::select('id_product', 'target',DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
+		// echo(json_encode($data['report']));
+		// return;
 
-		// foreach ($data['report'] as $forReport) {
-		// 	foreach ($data['pr_focus'] as $forFocus) {
-		// 		$prFocus = \App\DetailTransaction::select(DB::raw('SUM(quantity) AS quantity'))
-		// 		->where('id_product', $forFocus->id_product)->first();
-		// 	}
+		$i = 0;
+		
+		foreach ($data['report'] as $forReport) {
+			$report = [];
+			foreach ($data['target']->pr_focus as $forFocus) {				
+				$pr_focus = \App\DetailTransaction::select('id_product', DB::raw('(SUM(quantity)) AS quantity'))
+				->groupBy('id_product')
+				->where('id_sales', $forReport->id)
+				->where('id_product', $forFocus->id_product)
+				->whereYear('created_at','=', date('Y'))
+				->whereMonth('created_at','=', date('m'))
+				->first();
 
-		// }
+				// echo(json_encode($pr_focus));
+				// echo("arg1");
+				// return;
 
-		// echo(json_encode($data['target']));
+				if ($pr_focus != null && $pr_focus->id_product != null) {
+					$pr_focus->remain = $forFocus->target - $pr_focus->quantity;
+					array_push($report, $pr_focus);						
+				}else {
+					$pr = (object)[
+						"id_product" => $forFocus->id_product,
+						"quantity" => "0",
+						"remain" => $forFocus->target
+					];
+					array_push($report, $pr);
+				}
+				
+			}
+			$forReport->pr_focus_remain = $report;
+		}
 
+		
+		// echo(json_encode($data['report'][0]->pr_focus_remain[1]['remain']));
+		// return;
+		
 		$data['tgl_start'] = $request->get('tgl_start', 0);
 		$data['tgl_end'] = $request->get('tgl_end', 0);
 		if ($data['report']) {
@@ -76,8 +107,6 @@ class ReportController extends Controller
 			array_push($data['report_store'], $report);
 		}
 		
-		
-		
 		// echo(json_encode($data['report_store']));
 		// return;
 		$data['report'] = json_encode($data['report_store']);
@@ -88,12 +117,39 @@ class ReportController extends Controller
 		}
 	}
 
-	function product(Request $request)
+	function daily(Request $request)
 	{
 		$data['request'] = $request;
-		$data['product'] = \App\Product::get();
-		if ($data['product']) {
-			return \Template::display_gentelella('report_product', 'Laporan Produk', $data);
+		$dateStart = $request->get('date_start', date('Y-m-d'));
+		$dateEnd = $request->get('date_end', date('Y-m-d'));
+		// $data['store'] = \App\Store::get();
+		// echo(json_encode($store));
+		$data['report_store'] = [];
+		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
+		$data['report'] = \App\Transaction::select('users.id', 'users.name', 'stores.name AS store', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
+		->join('users', 'users.id', '=', 'transactions.id_sales')
+		->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+		->join('stores', 'stores.id', '=', 'visitation.id_store')
+		// ->join('detail_transactions', 'detail_transactions.id', '=', 'transactions.id')
+		->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+		->get();
+
+
+
+		foreach ($data['report'] as $forReport) {
+			$forReport->date = $this->tanggal_indo($forReport->date);
+
+			$forReport->product = \App\DetailTransaction::select('detail_transactions.id_product', 'detail_transactions.quantity', 'products.name AS product', 'detail_transactions.sub_total')
+			->join('products', 'products.id', '=', 'detail_transactions.id_product')
+			->where('id_transaction', $forReport->id_transaction)
+			->get();
+			// $data['report']->product = 
+		}
+
+		// echo(json_encode($data['report']));
+		// return;
+		if ($data['report']) {
+			return \Template::display_gentelella('report_daily', 'Laporan Produk', $data);
 		}else{
 			return redirect('report_sales')->with('error', 'Data');
 		}	
@@ -117,6 +173,7 @@ class ReportController extends Controller
 				'November',
 				'Desember'
 			);
+			$tanggal = substr($tanggal,0,10);
 			$split = explode('-', $tanggal);
 			return $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
 		}

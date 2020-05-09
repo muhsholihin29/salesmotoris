@@ -58,10 +58,10 @@ Route::get('/', 'MainController@index');
 	});
 
 	Route::group(['prefix' => 'report'], function(){
-		Route::get('/', 'ReportController@index');
+		Route::get('/sales', 'ReportController@index');
 
 		Route::get('/store', 'ReportController@store');
-		Route::get('/product', 'ReportController@product');
+		Route::get('/', 'ReportController@daily');
 
 		Route::post('product-focus', 'TargetController@prFocusAddUpdate');
 		Route::get('product-focus/{id}/edit', 'TargetController@prFocusGetEdit');

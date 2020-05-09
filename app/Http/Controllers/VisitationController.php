@@ -24,6 +24,9 @@ class VisitationController extends Controller
 		->where('visitation.id_sales', $idSales)
 		->where('stores.status', '1') //approved store
 		->get();
+
+		// echo(json_encode($data['visit']));
+		// return;
 		$store = \App\Store::select('stores.id', 'stores.name', 'visitation.id_store', 'visitation.id_sales')
 		->join('visitation', 'visitation.id_store', '=', 'stores.id')
 		->get();
@@ -31,7 +34,9 @@ class VisitationController extends Controller
 		foreach ($store as $st) {
 			array_push($notStore, $st->id);
 		}
-		$data['store'] = \App\Store::whereNotIn('id', $notStore)->get();
+		$data['store'] = \App\Store::whereNotIn('id', $notStore)
+		->where('stores.status', '1') //approved store
+		->get();
 
 		// echo(json_encode($data['visit']));
 
@@ -50,7 +55,7 @@ class VisitationController extends Controller
 
 	function addUpdate(Request $request)
     {
-    	// echo($request->rbDay);
+    	// echo($request->id_sales);
     	// return;
     	if ($request->id > 0) {
             $update = \App\Visitation::where('id','=', $request->id)->update($request->except(['_token']));

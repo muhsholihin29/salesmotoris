@@ -80,8 +80,8 @@
                 </li>
                 <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/report/daily">Harian</a></li>
-                    <li><a href="{{url('/')}}/report">Sales</a></li>
+                    <li><a href="{{url('/')}}/report?date_start={{date('Y-m-d')}}&date_end={{date('Y-m-d')}}">Harian</a></li>
+                    <li><a href="{{url('/')}}/report/sales">Sales</a></li>
                     <li><a href="{{url('/')}}/report/store">Toko</a></li>
                   </ul>
                 </li>

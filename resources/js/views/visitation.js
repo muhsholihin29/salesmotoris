@@ -1,6 +1,7 @@
 function filSearch() {
+	var baseUrl = base_url();
 	if ($('#filSales').val() != '') {
-		window.location.replace('visitation/'+$('#filSales').val());
+		window.location.replace(baseUrl+'/visitation/'+$('#filSales').val());
 	}
 }
 
@@ -22,7 +23,7 @@ function add() {
     document.getElementById('chRabu').checked = false;
     document.getElementById('chKamis').checked = false;
     document.getElementById('chJumat').checked = false;
-	$('#stock').val('');
+	
 	document.getElementById("load").style.visibility = "hidden";
 	var url = document.URL;
 	var idSales = url.substring(url.lastIndexOf('/') + 1);

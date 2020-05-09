@@ -194,8 +194,8 @@
           </div>
           <div class="modal-body body-confi" id="md-body-confi">
           </div>
-          <input type="text" name="id" id="delVisitId">
-          <input type="text" name="id_sales" id="delSalesId">
+          <input type="hidden" name="id" id="delVisitId">
+          <input type="hidden" name="id_sales" id="delSalesId">
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             <input type="submit" class="btn btn-success" name="" value="Ya">
@@ -212,6 +212,10 @@
 
 <script src="{{asset('resources/js/views/visitation.js')}}"></script>
 <script type="text/javascript">
+  function base_url() {
+    var APP_URL = {!! json_encode(url('/')) !!};
+    return APP_URL;
+  }
   function edit(id) {
     document.getElementById("load").style.visibility = "visible";
     var url = document.URL;

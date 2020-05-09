@@ -53,9 +53,7 @@
                 <th width="110px"><center>Sisa Target Omset</center></th>                
                 <th width="100px"><center>Total Transaksi</center></th>
                 <th width="110px"><center>Sisa Target Effective Call</center></th>
-                <th width="110px"><center>Total Produk Fokus</center></th>
-                <th width="110px"><center>Sisa Target Produk Fokus</center></th>
-                <th width="100px"><center>Aksi</center></th>
+                <th width="210px"><center>Sisa Target Produk Fokus</center></th>
               </tr>
             </thead>
 
@@ -82,12 +80,19 @@
               <td><center>{{$remainOmz}}</center></td>
               <td><center>{{$report->eff_call}}</center></td>
               <td><center>{{$remainEff}}</center></td>
-              <td><center>0</center></td>
-              <td><center>0</center></td>
-              <td>
-                <form action="{{url('/')}}/report/{{$report->id}}" method="get">
-                  <button type="submit" class="btn transparent btn-grey">Detail</button>
-                </form>
+              @foreach ($report->pr_focus_remain as $key=>$prRemain)
+              <?php 
+              if ($prRemain->remain < 1) {
+                  $remain[$key] = 'Tercapai';
+              }else{
+                $remain[$key] = $prRemain->remain;
+              }
+              ?>
+              @endforeach
+              <td>                
+                {{$data['target']->pr_focus[0]->product}}: {{$remain[0]}} <br>
+                {{$data['target']->pr_focus[1]->product}}: {{$remain[1]}} <br>
+                {{$data['target']->pr_focus[2]->product}}: {{$remain[2]}} <br>
               </td>
             </tr>
             @endforeach

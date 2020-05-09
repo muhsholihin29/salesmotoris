@@ -1,28 +1,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- <link rel="stylesheet" href="{{ asset('assets/table_horz_scroll/vendor/bootstrap/css/bootstrap.min.css') }}"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 </head>
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="page-title">
     <div class="title_left">
-      <h3>Laporan Toko</h3>
-
+      <h3>Laporan Harian</h3>
     </div>
 
     <div class="title_right">
-
       <div class="col-md-9 col-sm-9 form-group pull-right top_search">
-        <span>Edit hapus data Asesor</span>  
+
       </div>
     </div>
   </div>
   <div class="clearfix"></div>
+
   <div class="row">
     <div class="col-md-12 col-sm-12">
       <div class="x_panel">
         <div class="x_title">
-          <h2><small>Filter Stok Sales</small></h2>
+          <h2><small>Filter berdasarkan tanggal</small></h2>
           <div class="clearfix"></div>
         </div>
         <div class="x_content">
@@ -35,45 +36,71 @@
                 </div>
               </div>
             </div>
-
         </div>
       </div>
     </div>
   </div>
+  <?php 
+  if(count($data['report']) == null){
+      echo("Tidak ada data");
+  }
+  ?>
+
+  @foreach ($data['report'] as $daily)
   <div class="row">
     <div class="col-md-12 col-sm-12">
       <div class="x_panel">
-        <div class="x_title">
-          <h2><small>Filter berdasarkan</small></h2>
-          <div class="clearfix"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="x_title">
+                <table style="width: 100%; border-collapse: collapse; border-style: hidden;">
+                  <tbody>
+                    <tr style="height: 21px;">
+                      <td style="width: 17.2505%; height: 39px;" rowspan="2">
+                        <img src="{{url('/public/transaction_image/').'/'.$daily->image}}" class="img-thumbnail rounded" style="width:204px;height:auto;">
+                      </td>
+                    </tr>
+                    <tr></tr>
+                    <tr style="height: 21px;">
+                      <td style="width: 17.2505%; height: 21px; padding-left: 30px;"><b>{{$daily->name}}</b></td>
+                    </tr>
+                    <tr style="height: 21px;">
+                      <td style="width: 17.2505%; height: 21px;"><i class="fas fa-store"></i>{{ $daily->store}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <p></p>
+              <hr class="solid">
+              @foreach ($daily->product as $product)
+              <table style="height: 40px; width: 100%; border-collapse: collapse; border-style: hidden; margin-left: 50px">
+                <tbody>
+                  <tr style="height: 10px;">
+                    <td style="width: 55.414%; height: 15px;" colspan="2">{{$product->product}}</td>
+                  </tr>
+                  <tr style="height: 10px;">
+                    <td style="width: 1%; height: 15px;">x</td>
+                    <td style="width: 48.9889%; height: 15px;">{{$product->quantity}}</td>
+                    <td style="width: 30.441%; height: 15px;">Rp{{$product->sub_total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p></p>
+              <hr class="solid">
+              @endforeach
+            </div>
+            <div class="col-md-3">
+              <center>{{$daily->date}}</center>
+            </div>
+          </div>
         </div>
-
-        
-        <table class="table table-bordered table-striped" id="mytable">
-          <thead>
-            <tr><th width="80px"><center>No<center></th>
-              <th><center>Toko</center></th>
-              <th width="250px"><center>Total Transaksi</center></th>
-            </tr>
-          </thead>
-
-          @foreach ($data['report_store'] as $key=>$st)
-          <tr>
-            <td><center>{{$key+1}}</center></td>
-            <td><center>{{$st['store']}}</center></td>
-            <td><center>
-              @if($st['transactions'] <= 0)
-              Tidak ada transaksi
-              @else
-              {{$st['transactions']}}
-              @endif
-            </center></td>
-          </tr>
-          @endforeach
-        </table>
       </div>
     </div>
-  </div>
+  </div>  
+  @endforeach 
 </div>
 
 <!-- Map Modal -->
@@ -124,15 +151,19 @@
 <!-- /Confirm Approve Modal -->   
 </div>
 </div>
+
 <!-- /page content-->
 
 <script src="{{asset('resources/js/views/report.js')}}"></script>
 <script type="text/javascript">
 
   function tgl(a, b) {
+    // document.body.innerHTML += '<form id="btn-number-action" action="pendaftaran" method="post">{{csrf_field()}}<input type="hidden" id="jtgl_start" name="tgl_start" value=""><input type="hidden" id="jtgl_end" name="tgl_end" value=""></form>';
+    
     
     $('#jtgl_start').val(a); 
     $('#jtgl_end').val(b);     
+    // document.getElementById("btn-number-action").submit(); 
   }
 
   function funTglStart(){

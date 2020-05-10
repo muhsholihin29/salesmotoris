@@ -13,15 +13,22 @@ function funTglStart(){
     return 0;
   }
   var datearrayA = start.split("-");
-    // console.log("aaaaaaaa" + datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2]);
-    return datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2];
-  }
+  // console.log("aaaaaaaa" + datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2]);
+  return datearrayA[1] + '/' + datearrayA[0] + '/' + datearrayA[2];
+}
 
-  function funTglEnd(){    
-    var end = $('#tgl_start').val();
-    if (end == 0) {
-      return 0;
-    }
-    var datearrayB = end.split("-");    
-    return datearrayB[1] + '/' + datearrayB[0] + '/' + datearrayB[2];
+function funTglEnd(){    
+  var end = $('#tgl_start').val();
+  if (end == 0) {
+    return 0;
   }
+  var datearrayB = end.split("-");    
+  return datearrayB[1] + '/' + datearrayB[0] + '/' + datearrayB[2];
+}
+
+$(function() {
+  $('.pop').on('click', function() {
+    $('.imagepreview').attr('src', $(this).find('img').attr('src'));
+    $('#imagemodal').modal('show');   
+  });     
+});

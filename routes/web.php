@@ -11,15 +11,9 @@
 |
 */
 
-// Route::get('/', function () {
-// 	return view('tes');
-// });
+Route::middleware('auth')->group(function () {
 
-// Route::get('/', 'MainController@index');
-Route::get('/', 'TargetController@index');
-// Route::middleware('auth')->group(function () {
-
-	
+	Route::get('/', 'TargetController@index');	
 
 	Route::get('/store', 'StoreController@index');
 	Route::get('/store/{id}/edit', 'StoreController@edit');
@@ -69,11 +63,14 @@ Route::get('/', 'TargetController@index');
 		Route::put('product-focus/{id}', 'TargetController@update');
 		Route::post('product-focus/del', 'TargetController@prFocusDel');
 	});
-// });
-// Route::group(['middleware' => 'api'], function () {
-	// Route::post('/api/crud/add-store', 'StoreController@addStore');
-// });
-// Route::get('/login', 'MainController@loginPage');
+	Route::group(['prefix' => 'sales'], function(){
+		Route::get('register', 'SalesController@index');
+		Route::post('register', 'SalesController@register');
+		Route::post('register/cek-username', 'SalesController@registerCekUsername');
+		Route::post('register/cek-email', 'SalesController@registerCekEmail');
+	});
+});
+Route::get('/login', 'MainController@loginPage');
 
 
 Auth::routes();

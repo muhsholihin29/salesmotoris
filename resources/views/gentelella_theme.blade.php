@@ -51,7 +51,7 @@
           <!-- menu profile quick info -->
           <div class="profile clearfix">
             <div class="profile_pic">
-              <img src="{{asset('assets/img/user.png')}}" alt="..." class="img-circle profile_img">
+              <img src="{{asset('public/img/user.png')}}" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
               <span>Welcome,</span>
@@ -67,182 +67,187 @@
             <div class="menu_section">
               <h3>General</h3>
               <ul class="nav side-menu">
-                <li><a href="{{url('/')}}/"><i class="fa fa-tachometer"></i> Target</a>
+                <li><a href="{{url('/')}}/">
+                  <i class="fa"><i class="fas fa-bullseye"></i></i> Target</a>
                 </li>
-                <li><a href="{{url('/')}}/product"><i class="fa fa-tachometer"></i> Produk</a>
-                <li><a href="{{url('/')}}/stock"><i class="fa fa-tachometer"></i> Stok</a>
+                <li><a href="{{url('/')}}/product">
+                  <i class="fa"><i class="fas fa-box"></i></i> Produk</a>                  
                 </li>
-                <li><a href="{{url('/')}}/store"><i class="fa fa-tachometer"></i> Toko</a>
+                <li><a href="{{url('/')}}/stock">
+                  <i class="fa"><i class="fas fa-boxes"></i></i> Stok</a>
+                </li>                
+                <li><a href="{{url('/')}}/store">
+                  <i class="fa"><i class="fas fa-store"></i></i> Toko</a>                  
                 </li>
-                <li><a href="{{url('/')}}/visitation"><i class="fa fa-tachometer"></i> Kunjungan</a>
+                <li><a href="{{url('/')}}/visitation">
+                  <i class="fa"><i class="fas fa-atlas"></i></i> Kunjungan</a>                  
                 </li>
-                <li><a><i class="fa fa-edit"></i> Laporan <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="{{url('/')}}/report?date_start={{date('Y-m-d')}}&date_end={{date('Y-m-d')}}">Harian</a></li>
-                    <li><a href="{{url('/')}}/report/sales">Sales</a></li>
-                    <li><a href="{{url('/')}}/report/store">Toko</a></li>
-                  </ul>
+                <li><a href="{{url('/')}}/sales/register"><i class="fa fa-users"></i> Pendaftaran Sales</a>
                 </li>
-              </ul>
-            </div>            
-          </div>
-          <!-- /sidebar menu -->
-
-          <!-- /menu footer buttons -->
-          <div class="sidebar-footer hidden-small">
-            <a data-toggle="tooltip" data-placement="top" title="Settings">
-              <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-              <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Lock">
-              <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-              <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-            </a>
-          </div>
-          <!-- /menu footer buttons -->
-        </div>
-      </div>
-
-      <!-- top navigation -->
-      <div class="top_nav">
-        <div class="nav_menu">
-          <div class="nav toggle">
-            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-          </div>
-          <nav class="nav navbar-nav">
-            <ul class=" navbar-right">
-              <li class="nav-item dropdown open" style="padding-left: 15px;">
-                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                  <img src="{{asset('assets/img/user.png')}}" alt="">{{$data['name']}}
-                </a>
-                <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item"  href="javascript:;"> Profile</a>
-                  <a class="dropdown-item"  href="javascript:;">
-                    <span class="badge bg-red pull-right">50%</span>
-                    <span>Settings</span>
-                  </a>
-                  <a class="dropdown-item"  href="javascript:;">Help</a>
-                  <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
-                </div>
-              </li>
-
-              <li role="presentation" class="nav-item dropdown open">
-                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-envelope-o"></i>
-                  <span class="badge bg-green">6</span>
-                </a>
-                <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                  <li class="nav-item">
-                    <a class="dropdown-item">
-                      <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
-                      <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                      </span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="dropdown-item">
-                      <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
-                      <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                      </span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="dropdown-item">
-                      <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
-                      <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                      </span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="dropdown-item">
-                      <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
-                      <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                      </span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <div class="text-center">
-                      <a class="dropdown-item">
-                        <strong>See All Alerts</strong>
-                        <i class="fa fa-angle-right"></i>
-                      </a>
-                    </div>
-                  </li>
+                <li><a><i class="fa"><i class="fas fa-clipboard-list"></i></i> Laporan <span class="fa fa-chevron-down"></span></a>  
+                <ul class="nav child_menu">
+                  <li><a href="{{url('/')}}/report?date_start={{date('Y-m-d')}}&date_end={{date('Y-m-d')}}">Harian</a></li>
+                  <li><a href="{{url('/')}}/report/sales">Sales</a></li>
+                  <li><a href="{{url('/')}}/report/store">Toko</a></li>
                 </ul>
               </li>
             </ul>
-          </nav>
+          </div>            
         </div>
+        <!-- /sidebar menu -->
+
+        <!-- /menu footer buttons -->
+        <div class="sidebar-footer hidden-small">
+          <a data-toggle="tooltip" data-placement="top" title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+          </a>
+        </div>
+        <!-- /menu footer buttons -->
       </div>
-      <!-- /top navigation -->
-
-      <!-- page content -->
-      <?php 
-      if(!empty($data['content'])){
-        echo $data['content'];
-      }
-      ?>
-      <!-- /page content -->
-
-      <!-- footer content -->
-      <footer>
-        <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-        </div>
-        <div class="clearfix"></div>
-      </footer>
-      <!-- /footer content -->
     </div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fontawesome-iconpicker/3.2.0/js/fontawesome-iconpicker.js"></script>
-  <!-- Bootstrap -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-  <!-- FastClick -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js"></script>
-  <!-- NProgress -->
-  <!-- <script src="{{asset('resources/gentelella-theme/vendors/nprogress/nprogress.js')}}"></script> -->
-  <!-- validator -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/12.1.0/validator.js"></script>
-  <!-- jQuery custom content scroller -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-  <!-- Cropper -->
-  <!-- <script src="{{asset('resources/gentelella-theme/vendors/cropper/dist/cropper.min.js')}}"></script> -->
-  <!-- Custom Theme Scripts -->
-  <script src="{{asset('resources/gentelella-theme/build/js/custom.min.js')}}"></script>
-  <!-- PNotify -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.buttons.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.nonblock.js"></script>
-  <!-- bootstrap-daterangepicker -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/moment.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.js"></script>
-  <!-- bootstrap-datetimepicker     -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
+    <!-- top navigation -->
+    <div class="top_nav">
+      <div class="nav_menu">
+        <div class="nav toggle">
+          <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+        </div>
+        <nav class="nav navbar-nav">
+          <ul class=" navbar-right">
+            <li class="nav-item dropdown open" style="padding-left: 15px;">
+              <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                <img src="{{asset('assets/img/user.png')}}" alt="">{{$data['name']}}
+              </a>
+              <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item"  href="javascript:;"> Profile</a>
+                <a class="dropdown-item"  href="javascript:;">
+                  <span class="badge bg-red pull-right">50%</span>
+                  <span>Settings</span>
+                </a>
+                <a class="dropdown-item"  href="javascript:;">Help</a>
+                <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+              </div>
+            </li>
+
+            <li role="presentation" class="nav-item dropdown open">
+
+              <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                <li class="nav-item">
+                  <a class="dropdown-item">
+                    <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
+                    <span>
+                      <span>John Smith</span>
+                      <span class="time">3 mins ago</span>
+                    </span>
+                    <span class="message">
+                      Film festivals used to be do-or-die moments for movie makers. They were where...
+                    </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="dropdown-item">
+                    <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
+                    <span>
+                      <span>John Smith</span>
+                      <span class="time">3 mins ago</span>
+                    </span>
+                    <span class="message">
+                      Film festivals used to be do-or-die moments for movie makers. They were where...
+                    </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="dropdown-item">
+                    <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
+                    <span>
+                      <span>John Smith</span>
+                      <span class="time">3 mins ago</span>
+                    </span>
+                    <span class="message">
+                      Film festivals used to be do-or-die moments for movie makers. They were where...
+                    </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="dropdown-item">
+                    <span class="image"><img src="{{asset('assets/img/user.png')}}" alt="Profile Image" /></span>
+                    <span>
+                      <span>John Smith</span>
+                      <span class="time">3 mins ago</span>
+                    </span>
+                    <span class="message">
+                      Film festivals used to be do-or-die moments for movie makers. They were where...
+                    </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <div class="text-center">
+                    <a class="dropdown-item">
+                      <strong>See All Alerts</strong>
+                      <i class="fa fa-angle-right"></i>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <!-- /top navigation -->
+
+    <!-- page content -->
+    <?php 
+    if(!empty($data['content'])){
+      echo $data['content'];
+    }
+    ?>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+      <div class="pull-right">
+        Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fontawesome-iconpicker/3.2.0/js/fontawesome-iconpicker.js"></script>
+<!-- Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<!-- FastClick -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js"></script>
+<!-- NProgress -->
+<!-- <script src="{{asset('resources/gentelella-theme/vendors/nprogress/nprogress.js')}}"></script> -->
+<!-- validator -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/12.1.0/validator.js"></script>
+<!-- jQuery custom content scroller -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<!-- Cropper -->
+<!-- <script src="{{asset('resources/gentelella-theme/vendors/cropper/dist/cropper.min.js')}}"></script> -->
+<!-- Custom Theme Scripts -->
+<script src="{{asset('resources/gentelella-theme/build/js/custom.min.js')}}"></script>
+<!-- PNotify -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.buttons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.nonblock.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.js"></script>
+<!-- bootstrap-datetimepicker     -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
 
 </body>
 </html>

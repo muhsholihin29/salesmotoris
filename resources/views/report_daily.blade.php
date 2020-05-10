@@ -28,21 +28,21 @@
         </div>
         <div class="x_content">
           <div class="item form-group row ">
-              <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
-              <div class="col-md-4 col-sm-3">                  
-                <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                  <span id="tanggal">{{$data['date_picker']}}</span> <b class="caret"></b>
-                </div>
+            <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
+            <div class="col-md-4 col-sm-3">                  
+              <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                <span id="tanggal">{{$data['date_picker']}}</span> <b class="caret"></b>
               </div>
             </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <?php 
   if(count($data['report']) == null){
-      echo("Tidak ada data");
+    echo("Tidak ada data");
   }
   ?>
 
@@ -58,7 +58,9 @@
                   <tbody>
                     <tr style="height: 21px;">
                       <td style="width: 17.2505%; height: 39px;" rowspan="2">
-                        <img src="{{url('/public/transaction_image/').'/'.$daily->image}}" class="img-thumbnail rounded" style="width:204px;height:auto;">
+                        <a href="#" class="pop">
+                          <img src="{{url('/public/transaction_image/').'/'.$daily->image}}" class="img-thumbnail rounded" style="width:204px;height:auto;">
+                        </a>
                       </td>
                     </tr>
                     <tr></tr>
@@ -102,6 +104,19 @@
   </div>  
   @endforeach 
 </div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">              
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Image Modal -->
 
 <!-- Map Modal -->
 <div class="modal fade modal-map" id="modal-edit-visit" tabindex="-1" role="dialog" aria-hidden="true">

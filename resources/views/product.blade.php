@@ -94,7 +94,7 @@
             </div>         
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <input type="submit" class="btn btn-primary" name="" value="Simpan" onclick="return validateFormUpdate();">
+              <input type="submit" class="btn btn-primary" name="" value="Simpan">
               <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
             </div>
           </form>
@@ -107,15 +107,20 @@
   <div class="modal fade modal-confi"tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
-        <form action="{{url('/')}}/product/" method="delete" accept-charset="utf-8">
+        <form action="{{url('/')}}/product/del" method="post" accept-charset="utf-8">
           @csrf
           <div class="modal-header">
             <h4 class="modal-title" id="myModalLabel">Hapus Produk</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <div class="modal-body body-confi" id="md-body-confi">
+            <p>Menghapus produk akan menghapus data lain yang menggunakan produk ini</p>
+          </div>
+          <div class="modal-body body-confi">
+            <p>Menghapus produk akan menghapus data lain yang menggunakan produk ini</p>
           </div>
           <input type="hidden" name="id" id="delProductId">
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             <input type="submit" class="btn btn-success" name="" value="Ya">
@@ -131,8 +136,6 @@
 @stack('scripts')
 <script src="{{asset('resources/js/views/product.js')}}"></script>
 @endstack
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
-async defer></script>
 <script type="text/javascript">
   function update(id) {
     jQuery.ajax({

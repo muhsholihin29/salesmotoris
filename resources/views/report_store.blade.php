@@ -30,7 +30,7 @@
               <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
               <div class="col-md-4 col-sm-3">                  
                 <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                  <i class="fa fa-calendar"></i>
                   <span id="tanggal">{{$data['date_picker']}}</span> <b class="caret"></b>
                 </div>
               </div>

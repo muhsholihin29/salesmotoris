@@ -14,9 +14,9 @@ class SalesController extends Controller
 
     function register(Request $request)
     {
-        $request->level = 'sales';
-        $request->api_token = base64_encode(random_bytes(32));
-        $request->password = password_hash($request->password, PASSWORD_DEFAULT);
+        $request->merge(['level' => 'sales']);
+        $request->merge(['api_token' => base64_encode(random_bytes(32))]);
+        $request->merge(['password' => password_hash($request->password, PASSWORD_DEFAULT)]);
     	$add = \App\User::create($request->except(['_token']));
         if ($add) {
             return redirect('sales/register')->with('add', 'Data');    

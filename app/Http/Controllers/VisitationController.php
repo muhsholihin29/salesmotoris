@@ -71,12 +71,13 @@ class VisitationController extends Controller
             }else{
                 return redirect('visitation/'.$request->id_sales)->with('error', 'Data');
             }
-
         }
     }
 
     function delete(Request $request)
     {
+    	$delDetailTransaction = \App\Transaction::where('id_visitation',$request->id)->delete();
+    	$delTransaction = \App\Transaction::where('id_visitation',$request->id)->delete();
     	$del = \App\Visitation::where('id',$request->id)->delete();
     	if ($del) {
             return redirect('visitation/'.$request->id_sales)->with('delete', 'Data');   

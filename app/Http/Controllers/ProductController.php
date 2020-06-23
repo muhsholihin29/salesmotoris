@@ -17,8 +17,10 @@ class ProductController extends Controller
 
     function addUpdate(Request $request)
     {
+        echo json_encode($request);
         if ($request->id > 0) {
             $update = \App\Product::where('id','=', $request->id)->update($request->except(['_token']));
+            
             if ($update) {
                 return redirect('product')->with('update', 'Data');    
             }else{
@@ -43,8 +45,11 @@ class ProductController extends Controller
 
     function delete(Request $request)
     {
+        $delDetail = \App\DetailTransaction::where('id_product','=', $request->id)->delete();
+        $delStock = \App\StockSales::where('id_product','=', $request->id)->delete();
+        $delTrgFocus = \App\ProductFocus::where('id_product','=', $request->id)->delete();
         $del = \App\Product::where('id','=', $request->id)->delete();
-        if ($del) {
+        if ($delDetail && $delStock && $delTrgFocus && $del) {
             return redirect('product')->with('delete', 'Data');   
         }else{
             return redirect('product')->with('error', 'Data');

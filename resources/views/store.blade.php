@@ -51,7 +51,7 @@
                 <button type="button" class="btn transparent btn-red" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-delete-store" onclick="return delConfirm('{{$store->id}}','{{$store->name}}');">Hapus</button>
                 <?php 
               } else { ?>
-                <button type="button" class="btn transparent btn-green" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-edit-store" onclick="return edit($store->id);">Ubah</button>
+                <button type="button" class="btn transparent btn-green" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-edit-store" onclick="return edit({{$store->id}});">Ubah</button>
                 <button type="button" class="btn transparent btn-red" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-delete-store" onclick="return delConfirm('{{$store->id}}','{{$store->name}}');">Hapus</button>
                 <?php 
               } ?>
@@ -63,9 +63,50 @@
     </div>
   </div>
 </div>
-
+<!-- Edit Store Modal -->
+<div class="modal fade modal-edit-store" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="update-label">Ubah Toko </h4><span> </span>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+        <form action="{{url('/')}}/store" class="form-horizontal form-label-left" method="POST">
+        <div class="row" id="maps">
+          <div class="col" id="mapEdit"></div>
+          <div class="col">
+            
+            {{csrf_field()}}            
+            <input type="hidden" id="storeId" name="id">
+            <div class="form-group row">
+              <label class="control-label col-md-2 col-sm-2 label-align">Toko</label>
+              <div class="input-group col-md-6 col-sm-6">           
+                <input type="text" class="form-control" name="name" id="name" value="" placeholder=""  required>
+              </div>                
+            </div>   
+            <div class="form-group row">
+              <label class="control-label col-md-2 col-sm-2 label-align">Alamat</label>
+              <div class="input-group col-md-6 col-sm-6">           
+                <input type="text" class="form-control" name="address" id="address" value="" placeholder=""  required>
+              </div>                
+            </div> 
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" name="" value="Simpan">
+          <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
+        </div>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div>
+<!-- /edit Store Modal --> 
 <!-- Map Modal -->
-<div class="modal fade modal-map" id="modal-edit-store" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-map" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -80,7 +121,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input type="submit" class="btn btn-primary" name="" value="Simpan" onclick="return validateFormUpdate();">
+          <input type="submit" class="btn btn-primary" name="" value="Simpan">
           <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
         </div>
       </div>        
@@ -139,6 +180,29 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
 async defer></script>
 <script type="text/javascript">
+
+  function edit(id) {
+    console.log(id);
+    jQuery.ajax({
+      url: '{{ url('/')}}'.concat('/store/',id,'/edit'),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (result) {
+        if (result != '[]') {
+          console.log(result);
+          document.getElementById('update-label').innerHTML = 'Ubah Toko ' + result.name;
+          $('#storeId').val(result.id);
+          $('#name').val(result.name);
+          $('#address').val(result.address);
+        }
+
+      },
+      error: function (data, textStatus, errorThrown) {
+        console.log(data);
+        pnotify('Error', textStatus,'error');
+      }
+    });
+  }
 
   @if (Session::has('approve'))
   console.log("ini approve");

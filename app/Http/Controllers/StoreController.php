@@ -29,9 +29,21 @@ class StoreController extends Controller
 		
 	}
 
+	function getEdit(Request $request, $id)
+	{
+		$product = \App\Store::where('id', $id)->first();
+        echo json_encode($product);
+	}
+
 	function update(Request $request)
 	{
-		
+		$update = \App\Store::where('id','=', $request->id)->update($request->except(['_token']));
+            
+            if ($update) {
+                return redirect('store')->with('update', 'Data');    
+            }else{
+                return redirect('store')->with('error', 'Data');
+            } 
 	}
 
 	function delete(Request $request)

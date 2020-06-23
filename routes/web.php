@@ -16,8 +16,8 @@ Route::middleware('auth')->group(function () {
 	Route::get('/', 'TargetController@index');	
 
 	Route::get('/store', 'StoreController@index');
-	Route::get('/store/{id}/edit', 'StoreController@edit');
-	Route::put('/store/{id}', 'StoreController@update');
+	Route::get('/store/{id}/edit', 'StoreController@getEdit');
+	Route::post('/store', 'StoreController@update');
 	Route::post('/store/del', 'StoreController@delete');
 	Route::post('/store/approve', 'StoreController@approve');
 
@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/product', 'ProductController@addUpdate');
 	Route::get('/product/{id}/edit', 'ProductController@getEdit');
 	Route::put('/product/{id}', 'ProductController@update');
-	Route::post('/product/', 'ProductController@delete');
+	Route::post('/product/del', 'ProductController@delete');
 
 	Route::get('/visitation', 'VisitationController@index');
 	Route::post('/visitation', 'VisitationController@addUpdate');

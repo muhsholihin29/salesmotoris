@@ -33,6 +33,32 @@ function initMap(coordinate) {
     map.setStreetView(panorama);
 }
 
+function editMap(coordinate) {       
+    // console.log(coordinate);
+    var coor = coordinate.split(', ');
+    var latitude = parseFloat(coor[0]);
+    var longitude = parseFloat(coor[1]);
+    // console.log(longitude);
+
+    var myLatLng = {lat: latitude, lng: longitude};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: myLatLng,
+        zoom: 18
+    });
+    var marker = new google.maps.Marker({
+        position: myLatLng, 
+        map: map, 
+        draggable: true,
+        icon: "http://maps.google.com/mapfiles/kml/paddle/O.png"
+    });
+
+    // if (map) {
+    //     map.setCenter(myLatLng);
+    //     map.setPosition(event.latLng);
+    // }    
+}
+
 function approveConfirm(id, name) {
     console.log(name);
     document.getElementById('md-body-confi').innerHTML = 'Apakah anda yakin menyetujui ' + name + '?';

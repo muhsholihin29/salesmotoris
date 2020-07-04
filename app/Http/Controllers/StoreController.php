@@ -20,15 +20,13 @@ class StoreController extends Controller
 
 	function approve(Request $request)
 	{
-// 		$approve =
-        echo "qqqq";
-            \App\Store::where('id','=', 20)->update(['status' => 1]);
+		$approve = \App\Store::where('id','=', $request->id)->update(['status' => 1]);
         
-// 		if ($approve) {
-// 			return redirect('store')->with('approve', 'Data');	
-// 		}else{
-// 			return redirect('store')->with('error', 'Data');
-// 		}
+		if ($approve) {
+			return redirect('store')->with('approve', 'Data');	
+		}else{
+			return redirect('store')->with('error', 'Data');
+		}
 		
 	}
 

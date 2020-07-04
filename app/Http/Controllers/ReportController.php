@@ -28,8 +28,6 @@ class ReportController extends Controller
 		$data['target']->pr_focus = \App\ProductFocus::select('target_product_focus.id_product', 'target_product_focus.target', 'products.name AS product')
 		->join('products', 'products.id', '=', 'target_product_focus.id_product')->get();
 		$pr_focus_total = \App\ProductFocus::select('id_product', 'target',DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
-		// echo(json_encode($data['report']));
-		// return;
 
 		$i = 0;
 		
@@ -43,10 +41,6 @@ class ReportController extends Controller
 				->whereYear('created_at','=', date('Y'))
 				->whereMonth('created_at','=', date('m'))
 				->first();
-
-				// echo(json_encode($pr_focus));
-				// echo("arg1");
-				// return;
 
 				if ($pr_focus != null && $pr_focus->id_product != null) {
 					$pr_focus->remain = $forFocus->target - $pr_focus->quantity;

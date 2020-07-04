@@ -34,13 +34,11 @@ class StockController extends Controller
 			array_push($notStock, $pr->id);
 		}
 		$data['product'] = \App\product::whereNotIn('id', $notStock)->get();
-		// echo(json_encode($data['stock']));
     	return \Template::display_gentelella('stock', 'Target', $data);
     }
 
     function addUpdate(Request $request)
-    {
-    	
+    {	
     	if ($request->id > 0) {
             $update = \App\StockSales::where('id','=', $request->id)->update($request->except(['_token']));
             if ($update) {

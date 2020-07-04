@@ -141,7 +141,7 @@
         </div>
         <div class="modal-body body-confi" id="md-body-confi">
         </div>
-        <input type="hidden" name="id" id="storeId">
+        <input type="hidden" name="id" id="storeIdApprove">
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <input type="submit" class="btn btn-success" name="" value="Ya">

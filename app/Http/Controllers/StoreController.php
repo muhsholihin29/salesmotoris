@@ -22,7 +22,7 @@ class StoreController extends Controller
 	{
 // 		$approve =
         echo "qqqq";
-            \App\Store::where('id','=', $request->idd)->update(['status' => 1]);
+            \App\Store::where('id','=', 20)->update(['status' => 1]);
         
 // 		if ($approve) {
 // 			return redirect('store')->with('approve', 'Data');	

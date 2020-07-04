@@ -90,9 +90,9 @@
               ?>
               @endforeach
               <td>                
-                {{$data['target']->pr_focus[0]->product}}: {{$remain[0]}} <br>
-                {{$data['target']->pr_focus[1]->product}}: {{$remain[1]}} <br>
-                {{$data['target']->pr_focus[2]->product}}: {{$remain[2]}} <br>
+                @foreach ($remain as $key=>$r)   
+                {{$data['target']->pr_focus[$key]->product}}: {{$remain[$key]}} <br>
+                @endforeach
               </td>
             </tr>
             @endforeach

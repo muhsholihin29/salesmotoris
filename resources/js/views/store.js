@@ -62,7 +62,7 @@ function editMap(coordinate) {
 function approveConfirm(id, name) {
     console.log(name);
     document.getElementById('md-body-confi').innerHTML = 'Apakah anda yakin menyetujui ' + name + '?';
-    $('#storeId').val(id);
+    $('#storeIdApprove').val(id);
 }
 
 function pnotify(title, text, type) {

@@ -9,11 +9,11 @@ use DB;
 
 class ApiReportController extends Controller
 {
-	function index(Request $request)
+	function index(Request $request) //report daily home
 	{
 		// $today = '2020-02-25';
 		$today = date('Y-m-d');
-		$data = [];
+		$dataReportDay = [];
 		$yesterday = date_add(date_create($today),date_interval_create_from_date_string("-1 days"))->format('Y-m-d');
 
 		if (date('D', strtotime($today)) == 'Sat' || date('D', strtotime($today)) == 'Sun') {
@@ -44,13 +44,31 @@ class ApiReportController extends Controller
 				$total_income += $rep->total_income;
 				$completed_visitation++;
 			}
-			$data[$i] = [
+
+			$dataReportDay[$i] = [
 				'days' =>  $this->getDayName(date('w', strtotime($days[$i]))),
 				'date' => $days[$i],
 				'total_income' => $total_income,
 				'completed_visitation' => $completed_visitation					
 			];
 		}
+
+		//remain target
+		$target = \App\Target::first();
+		$reportTarget = \App\Transaction::select('users.id', 'users.name', DB::raw('COUNT(total_income) as eff_call'), DB::raw('SUM(total_income) AS income'))
+			->groupBy('users.id')
+			->join('users', 'users.id', '=', 'transactions.id_sales')
+			->whereYear('transactions.created_at','=', date('Y'))
+			->whereMonth('transactions.created_at','=', date('m'))
+			->where('users.id', $request->id_sales)
+			->first();
+		$data = [
+			'days' => $dataReportDay,
+			'target' => [
+				'eff_call' => $target->target_eff_call - $reportTarget->eff_call,
+				'income' => $target->target_omset - $reportTarget->income
+			]
+		];
 
 		$meta = [
 			'code' => Response::HTTP_OK, 

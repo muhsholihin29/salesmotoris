@@ -7,7 +7,7 @@ use DB;
 
 class ReportController extends Controller
 {
-	function index(Request $request)
+	function index(Request $request) //sales
 	{
 		$data['request'] = $request;
   //   	$data['target_transaction'] = \App\Target::select('target.id', 'target.id_sales', 'target.target_omset', 'target.target_eff_call', DB::raw('COUNT(total_income) as eff_call'), 'users.name', DB::raw('SUM(total_income) AS income'))
@@ -25,8 +25,7 @@ class ReportController extends Controller
 		->whereMonth('transactions.created_at','=', date('m'))
 		->get();
 
-		$data['target']->pr_focus = \App\ProductFocus::select('target_product_focus.id_product', 'target_product_focus.target', 'products.name AS product')
-		->join('products', 'products.id', '=', 'target_product_focus.id_product')->get();
+		$data['target']->pr_focus = \App\ProductFocus::select('target_product_focus.id_product', 'target_product_focus.target', 'products.name AS product')->join('products', 'products.id', '=', 'target_product_focus.id_product')->get();
 		$pr_focus_total = \App\ProductFocus::select('id_product', 'target',DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
 
 		$i = 0;

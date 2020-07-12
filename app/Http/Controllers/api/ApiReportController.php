@@ -62,12 +62,20 @@ class ApiReportController extends Controller
 			->whereMonth('transactions.created_at','=', date('m'))
 			->where('users.id', $request->id_sales)
 			->first();
-		$data = [
-			'days' => $dataReportDay,
-			'target' => [
+
+		$dataReportTarget = [
+				'eff_call' => $target->target_eff_call,
+				'income' => $target->target_omset
+			];
+		if (!is_null($reportTarget)) {
+			$dataReportTarget = [
 				'eff_call' => $target->target_eff_call - $reportTarget->eff_call,
 				'income' => $target->target_omset - $reportTarget->income
-			]
+			];
+		}
+		$data = [
+			'daily' => $dataReportDay,
+			'target' => $dataReportTarget
 		];
 
 		$meta = [

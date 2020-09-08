@@ -164,7 +164,7 @@ class ApiTransactionController extends Controller
 					}
 					$meta = [
 						'code' => Response::HTTP_OK, 
-						'message' => 'Success2'
+						'message' => 'Success'
 					];
 				}else{
 					$meta = [

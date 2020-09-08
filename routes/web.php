@@ -11,7 +11,7 @@
 |
 */
 
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
 
 	Route::get('/', 'TargetController@index');	
 
@@ -62,6 +62,8 @@ Route::middleware('auth')->group(function () {
 		Route::get('product-focus/{id}/edit', 'TargetController@prFocusGetEdit');
 		Route::put('product-focus/{id}', 'TargetController@update');
 		Route::post('product-focus/del', 'TargetController@prFocusDel');
+
+
 	});
 	Route::group(['prefix' => 'sales'], function(){
 		Route::get('register', 'SalesController@index');
@@ -69,10 +71,10 @@ Route::middleware('auth')->group(function () {
 		Route::post('register/cek-username', 'SalesController@registerCekUsername');
 		Route::post('register/cek-email', 'SalesController@registerCekEmail');
 	});
-});
+// });
 Route::get('/login', 'MainController@loginPage');
+Route::get('/report/print', 'ReportController@print');
 
-
-Auth::routes();
+Auth::routes(); 
 
 Route::get('/home', 'HomeController@index')->name('home');

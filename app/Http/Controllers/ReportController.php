@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use DateTime;
 
 class ReportController extends Controller
 {
@@ -127,8 +128,6 @@ class ReportController extends Controller
 		->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
 		->get();
 
-
-
 		foreach ($data['report'] as $forReport) {
 			$forReport->date = $this->tanggal_indo($forReport->date);
 
@@ -138,6 +137,155 @@ class ReportController extends Controller
 			->get();
 			// $data['report']->product = 
 		}
+
+		// echo(json_encode($data['report']));
+		// return;
+
+
+		//Export excel
+		
+		// $dateStart = $request->get('date_start', date('Y-m-d'));
+		// $dateEnd = $request->get('date_end', date('Y-m-d'));
+		// $dateStart = $request->get('date_start', date('2020-09-03'));
+		// $dateEnd = $request->get('date_end', date('2020-09-03'));
+		// $data['store'] = \App\Store::get();
+		// echo(json_encode($store));
+		$sales = \App\User::where('level', 'sales')->get();
+		// echo(json_encode($sales));
+		
+			$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'stores.name AS store', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
+			->join('users', 'users.id', '=', 'transactions.id_sales')
+			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+			->join('stores', 'stores.id', '=', 'visitation.id_store')
+		
+			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+			->get();
+		
+		
+		$dataExcel = [];
+		$idSalesInDaily = 0;
+		foreach ($sales as $sal) {
+			$detailTrx = [];
+			$dataStore = [];
+			foreach ($dbReport as $dbRep) {			
+				if ($dbRep->sales_id == $sal->id){
+					$idSalesInDaily = $dbRep->sales_id;
+					$dbReportDetail = \App\DetailTransaction::where('id_transaction', $dbRep->id_transaction)
+					->get();
+					foreach ($dbReportDetail as $ProductDetail) {
+						$ProductDetail->product = \App\Product::select('name', 'unit')
+						->where('id', $ProductDetail->id_product)
+						->first();
+					}					
+					$detailTrx = $dbReportDetail;
+				
+				array_push($dataStore, [
+					'id_store' => $dbRep->store_id,
+					'store' => $dbRep->store,
+					'income' => $dbRep->total_income,
+					'products' => $detailTrx
+				]);
+				}
+			}
+			if ($idSalesInDaily == $sal->id){
+				array_push($dataExcel, [
+					'id_sales' => $sal->id,
+					'name' => $sal->name,
+					'transactions' => $dataStore
+				]);
+			}
+		}
+		$data['expExcel'] = json_decode(json_encode($dataExcel, true));
+		//\Export excel
+
+		$mDateStart = new DateTime($dateStart);
+		$mDateEnd = new DateTime($dateEnd);
+		if ($data['report'] == '[]') {
+			$data['error'] = 'empty';
+		}else if ($mDateStart->diff($mDateEnd)->format("%a") > 0){
+			$data['error'] = 'date_invalid';
+		}else{
+			$data['error'] = '';
+		}
+		// echo(json_encode($data));
+		
+		// return;
+
+		if ($data['report']) {
+			return \Template::display_gentelella('report_daily', 'Laporan Harian', $data);
+		}else{
+			return redirect('report_sales')->with('error', 'Data');
+		}	
+	}
+
+	function print(Request $request)
+	{
+		$data['request'] = $request;
+		// $dateStart = $request->get('date_start', date('Y-m-d'));
+		// $dateEnd = $request->get('date_end', date('Y-m-d'));
+		$dateStart = $request->get('date_start', date('2020-09-03'));
+		$dateEnd = $request->get('date_end', date('2020-09-03'));
+		// $data['store'] = \App\Store::get();
+		// echo(json_encode($store));
+		$sales = \App\User::where('level', 'sales')->get();
+		$data['report_store'] = [];
+		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
+		// echo(json_encode($sales));
+		
+			$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
+			->join('users', 'users.id', '=', 'transactions.id_sales')
+			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+			->join('stores', 'stores.id', '=', 'visitation.id_store')
+			// ->join('products', 'products.id', '=', 'visitation.products')
+			// ->join('detail_transactions', 'detail_transactions.id', '=', 'transactions.id')
+			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+			->get();
+		// echo(json_encode($dbReport));	
+		// return;
+		$dataExcel = [];
+		$idSalesInDaily = 0;
+		foreach ($sales as $sal) {
+			$detailTrx = [];
+			$dataStore = [];
+			foreach ($dbReport as $dbRep) {			
+				if ($dbRep->sales_id == $sal->id){
+					$idSalesInDaily = $dbRep->sales_id;
+					$dbReportDetail = \App\DetailTransaction::where('id_transaction', $dbRep->id_transaction)
+					->get();
+					foreach ($dbReportDetail as $ProductDetail) {
+						$ProductDetail->product = \App\Product::select('id', 'name AS product')
+						->where('id', $ProductDetail->id_product)
+						->first()->product;
+					}					
+					$detailTrx = $dbReportDetail;
+				
+				array_push($dataStore, [
+					'id_store' => $dbRep->store_id,
+					'products' => $detailTrx
+				]);
+				}
+			}
+			if ($idSalesInDaily == $sal->id){
+				array_push($dataExcel, [
+					'id_sales' => $sal->id,
+					'transactions' => $dataStore
+				]);
+			}
+		}
+
+		// echo(json_encode($dataExcel));
+		
+		// return;
+
+		// foreach ($data['report'] as $forReport) {
+		// 	$forReport->date = $this->tanggal_indo($forReport->date);
+
+		// 	$forReport->product = \App\DetailTransaction::select('detail_transactions.id_product', 'detail_transactions.quantity', 'products.name AS product', 'detail_transactions.sub_total')
+		// 	->join('products', 'products.id', '=', 'detail_transactions.id_product')
+		// 	->where('id_transaction', $forReport->id_transaction)
+		// 	->get();
+		// 	// $data['report']->product = 
+		// }
 
 		// echo(json_encode($data['report']));
 		// return;

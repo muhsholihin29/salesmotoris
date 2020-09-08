@@ -1,8 +1,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <!-- <link rel="stylesheet" href="{{ asset('assets/table_horz_scroll/vendor/bootstrap/css/bootstrap.min.css') }}"> -->
-  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="{{ asset('resources/css/report.css') }}">  
 </head>
 <!-- page content -->
 <div class="right_col" role="main">
@@ -36,7 +35,17 @@
               </div>
             </div>
           </div>
+          <?php if ($data['error'] == 'empty') { ?>
+            <button type="button" class="btn btn-success" data-backdrop="static" data-keyboard="false" data-toggle="tooltip" data-placement="top" title="Data Kosong">Export Excel</button>
+          <?php } ?>
+          <?php if ($data['error'] == 'date_invalid') { ?>
+            <button type="button" class="btn btn-success" data-backdrop="static" data-keyboard="false" data-toggle="tooltip" data-placement="top" title="Jangka waktu harus 1 hari" >Export Excel</button>
+          <?php } ?>
+          <?php if ($data['error'] == '') { ?>
+            <button type="button" class="btn btn-success" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-excel">Export Excel</button>
+          <?php } ?>
         </div>
+
       </div>
     </div>
   </div>
@@ -105,65 +114,53 @@
   @endforeach 
 </div>
 
-<!-- Image Modal -->
-<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">              
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <img src="" class="imagepreview" style="width: 100%;" >
-      </div>
-    </div>
-  </div>
-</div>
-<!-- /Image Modal -->
-
-<!-- Map Modal -->
-<div class="modal fade modal-map" id="modal-edit-visit" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Excel Modal -->
+<div class="modal fade modal-excel" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Map </h4><span> </span>
+        <h4 class="modal-title" id="update-label">Export Excel </h4><span> </span>
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body"> 
-        <div class="row" id="maps">
-          <div class="col" id="map"></div>
-          <div class="col" id="pano"></div>
-        </div>
+        <table class="table table-bordered table-striped" id="tableExcel" border="1px">
+          <thead>
+            <tr>
+              <th><center>Nama Sales</center></th>
+              <th><center>Toko</center></th>         
+              <th width="200px"><center>Barang</center></th>
+              <th width="200px"><center>Omset</center></th>
+            </tr>
+          </thead>
+
+          @foreach ($data['expExcel'] as $key=>$expExcel)
+            @foreach ($expExcel->transactions as $keyTrx=>$trx)
+          <tr>
+            <?php if ($keyTrx == 0) { ?>
+              <td rowspan="{{count($data['expExcel'])+1}}" valign="top"><center>{{$expExcel->name}}</center></td>
+            <?php } ?>            
+            <td valign="top"><center>{{$trx->store}}</center></td>
+            <td valign="top"><center>
+              @foreach ($trx->products as $keyProd=>$prod)
+                {{$prod->product->name}}: {{$prod->quantity}} {{$prod->product->unit}}; <br>
+              @endforeach
+            </center></td>
+            <td valign="top"><center>{{$trx->income}}</center></td>
+          </tr>
+            @endforeach
+          @endforeach
+        </table>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input type="submit" class="btn btn-primary" name="" value="Simpan" onclick="return validateFormUpdate();">
+          <input type="button" class="btn btn-success" id="btnExpExcel" name="" value="Unduh Excel">
           <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
         </div>
       </div>        
     </div>
   </div>
 </div>
-<!-- /Map Modal --> 
-<!-- Confirm Approve Modal -->   
-<div class="modal fade modal-confi"tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <form action="{{url('/')}}/visit/crud/approve" method="post" accept-charset="utf-8">
-        @csrf
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Setujui Toko</h4>
-        </div>
-        <div class="modal-body body-confi" id="md-body-confi">
-        </div>
-        <input type="hidden" name="id" id="visitId">
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-          <input type="submit" class="btn btn-success" name="" value="Ya">
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- /Confirm Approve Modal -->   
+<!-- /excel Modal -->  
 </div>
 </div>
 
@@ -171,6 +168,8 @@
 
 <script src="{{asset('resources/js/views/report.js')}}"></script>
 <script type="text/javascript">
+
+
 
   function tgl(a, b) {
     // document.body.innerHTML += '<form id="btn-number-action" action="pendaftaran" method="post">{{csrf_field()}}<input type="hidden" id="jtgl_start" name="tgl_start" value=""><input type="hidden" id="jtgl_end" name="tgl_end" value=""></form>';

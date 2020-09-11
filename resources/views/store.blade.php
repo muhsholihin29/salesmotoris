@@ -163,6 +163,9 @@
         </div>
         <div class="modal-body body-confi" id="md-body-confi-del">
         </div>
+        <div class="modal-body body-confi">
+            <p>Menghapus toko akan menghapus data lain yang menggunakan toko ini</p>
+          </div>
         <input type="hidden" name="id" id="delStoreId">
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

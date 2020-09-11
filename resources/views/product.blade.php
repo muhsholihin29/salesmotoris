@@ -114,7 +114,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <div class="modal-body body-confi" id="md-body-confi">
-            <p>Menghapus produk akan menghapus data lain yang menggunakan produk ini</p>
+            <p></p>
           </div>
           <div class="modal-body body-confi">
             <p>Menghapus produk akan menghapus data lain yang menggunakan produk ini</p>

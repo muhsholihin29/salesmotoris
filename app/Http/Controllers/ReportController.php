@@ -34,12 +34,13 @@ class ReportController extends Controller
 		foreach ($data['report'] as $forReport) {
 			$report = [];
 			foreach ($data['target']->pr_focus as $forFocus) {				
-				$pr_focus = \App\DetailTransaction::select('id_product', DB::raw('(SUM(quantity)) AS quantity'))
-				->groupBy('id_product')
-				->where('id_sales', $forReport->id)
-				->where('id_product', $forFocus->id_product)
-				->whereYear('created_at','=', date('Y'))
-				->whereMonth('created_at','=', date('m'))
+				$pr_focus = \App\DetailTransaction::select('detail_transactions.id_product', 'transactions.id_sales', DB::raw('(SUM(detail_transactions.quantity)) AS quantity'))
+				->groupBy('detail_transactions.id_product')
+				->join('transactions', 'transactions.id', '=', 'detail_transactions.id_transaction')
+				->where('transactions.id_sales', $forReport->id)
+				->where('detail_transactions.id_product', $forFocus->id_product)
+				->whereYear('detail_transactions.created_at','=', date('Y'))
+				->whereMonth('detail_transactions.created_at','=', date('m'))
 				->first();
 
 				if ($pr_focus != null && $pr_focus->id_product != null) {
@@ -53,13 +54,14 @@ class ReportController extends Controller
 					];
 					array_push($report, $pr);
 				}
-				
+				// echo(json_encode($pr_focus));
+				// return;
 			}
 			$forReport->pr_focus_remain = $report;
 		}
 
 		
-		// echo(json_encode($data['report'][0]->pr_focus_remain[1]['remain']));
+		// echo(json_encode($data['report'][1]));
 		// return;
 		
 		$data['tgl_start'] = $request->get('tgl_start', 0);

@@ -8,8 +8,19 @@ function pnotify(title, text, type) {
 }
 
 function filSearch() {
+	// console.log($('#filSales').val());
+
 	if ($('#filSales').val() != '') {
-		window.location.replace('stock/'+$('#filSales').val());
+		var pageUrl = window.location.href;
+		if (pageUrl.substr(pageUrl.lastIndexOf('/') + 1) > 0) {
+			var newUrl = pageUrl.split('/').slice(0,-1).join('/')+'/'+$('#filSales').val();
+			// url.replace(/\/[^\/]*$/, '/175')
+			console.log(newUrl);
+			window.location.replace(newUrl);	
+		} else{
+			window.location.replace('stock/'+$('#filSales').val());
+		}
+		
 	}
 }
 

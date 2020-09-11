@@ -49,11 +49,29 @@ class StoreController extends Controller
 
 	function delete(Request $request)
 	{
-		// $delete = \App\Store::where('id','=', $request->id)->delete();
-		// if ($delete) {
-		// 	return redirect('store')->with('del', 'Data');	
-		// }else{
-		// 	return redirect('store')->with('error', 'Data');
-		// }
+		
+		$idVisitation = \App\Visitation::where('id_store', $request->id)->first();
+		if (!empty($idVisitation)) {
+			$idVisitation = $idVisitation->id;
+		}
+		$idTransaction = \App\Transaction::select('id')->where('id_visitation', $idVisitation)->get();
+
+		foreach ($idTransaction as $i) {
+			$delDetailTrans = \App\DetailTransaction::where('id_transaction', $i->id)->delete();			
+			// if (!$delDetailTrans) {
+			// 	return redirect('store')->with('error', 'Data');	
+			// }
+		}		
+		$delTrans = \App\Transaction::where('id_visitation', $idVisitation)->delete();			
+		$delVisit = \App\Visitation::where('id_store', $request->id)->delete();			
+		$delStore = \App\Store::where('id','=', $request->id)->delete();
+		// echo(json_encode($idTransaction));
+		// return;
+		
+		if ($delStore) {
+			return redirect('store')->with('del', 'Data');	
+		}else{
+			return redirect('store')->with('error', 'Data');
+		}
 	}
 }

@@ -81,7 +81,7 @@
               <td><center>{{$report->eff_call}}</center></td>
               <td><center>{{$remainEff}}</center></td>
               @foreach ($report->pr_focus_remain as $key=>$prRemain)
-              <?php 
+              <?php  
               if ($prRemain->remain < 1) {
                   $remain[$key] = 'Tercapai';
               }else{

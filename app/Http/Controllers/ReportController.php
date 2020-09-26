@@ -61,11 +61,12 @@ class ReportController extends Controller
 		}
 
 		
-		// echo(json_encode($data['report'][1]));
-		// return;
+		echo(json_encode($data));
+		return;
 		
 		$data['tgl_start'] = $request->get('tgl_start', 0);
 		$data['tgl_end'] = $request->get('tgl_end', 0);
+
 		if ($data['report']) {
 			return \Template::display_gentelella('report_sales', 'Target', $data);
 		}else{

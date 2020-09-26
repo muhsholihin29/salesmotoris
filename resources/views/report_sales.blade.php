@@ -4,8 +4,10 @@
   <!-- <link rel="stylesheet" href="{{ asset('assets/table_horz_scroll/vendor/bootstrap/css/bootstrap.min.css') }}"> -->
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css">
+  <link rel="stylesheet" href="{{ asset('resources/css/report.css') }}"> 
 </head>
 <!-- page content -->
+
 <body>
   <div class="right_col" role="main">
     <div class="page-title">
@@ -31,7 +33,10 @@
 
           <table class="table table-bordered table-striped" id="myTable">
             <thead>
-              <tr><th width="50px"><center>No<center></th>
+              <tr>
+                <th width="10px">
+                  <center>No<center>
+                </th>
                 <th>
                   <div class="row">
                     <div class="col">
@@ -48,51 +53,166 @@
                     </div>
                   </div>
                 </th>
-                
-                <th width="110px"><center>Total Omset</center></th>
-                <th width="110px"><center>Sisa Target Omset</center></th>                
-                <th width="100px"><center>Total Transaksi</center></th>
-                <th width="110px"><center>Sisa Target Effective Call</center></th>
-                <th width="210px"><center>Sisa Target Produk Fokus</center></th>
+
+                <th width="110px">
+                  <center>Total Omset</center>
+                </th>
+                <th width="110px">
+                  <center>Sisa Target Omset</center>
+                </th>
+                <th width="80px">
+                  <center>Total Transaksi</center>
+                </th>
+                <th width="110px">
+                  <center>Sisa Target Effective Call</center>
+                </th>
+                <th width="150px">
+                  <center>Sisa Target Produk Fokus</center>
+                </th>
+                <th width="210px">
+                  <center>Graph</center>
+                </th>
               </tr>
             </thead>
 
             @foreach ($data['report'] as $key=>$report)
-            <?php 
-            $remainOmz = $data['target']->target_omset-$report->income;
+            <?php
+            $remainOmz = $data['target']->target_omset - $report->income;
             if ($remainOmz < 0) {
               $remainOmz = 'Tercapai';
-            }else{
-              $remainOmz = 'Rp'.number_format($remainOmz,2,',','.');
+            } else {
+              $remainOmz = 'Rp' . number_format($remainOmz, 2, ',', '.');
             }
 
-            $remainEff = $data['target']->target_eff_call-$report->eff_call;
+            $remainEff = $data['target']->target_eff_call - $report->eff_call;
             if ($remainEff < 0) {
               $remainEff = 'Target Tercapai';
             }
 
             // $remainPrFocus = $data['pr_focus']-
-             ?>
+            ?>
+            
             <tr>
-              <td><center>{{$key+1}}</center></td>
-              <td><center>{{$report->name}}</center></td>              
-              <td><center>Rp{{number_format($report->income,2,',','.')}}</center></td>
-              <td><center>{{$remainOmz}}</center></td>
-              <td><center>{{$report->eff_call}}</center></td>
-              <td><center>{{$remainEff}}</center></td>
+              <td>
+                <center>{{$key+1}}</center>
+              </td>
+              <td>
+                <center>{{$report->name}}</center>
+              </td>
+              <td>
+                <center>Rp{{number_format($report->income,2,',','.')}}</center>
+              </td>
+              <td>
+                <center>{{$remainOmz}}</center>
+              </td>
+              <td>
+                <center>{{$report->eff_call}}</center>
+              </td>
+              <td>
+                <center>{{$remainEff}}</center>
+              </td>
               @foreach ($report->pr_focus_remain as $key=>$prRemain)
-              <?php  
+              <?php
               if ($prRemain->remain < 1) {
-                  $remain[$key] = 'Tercapai';
-              }else{
+                $remain[$key] = 'Tercapai';
+              } else {
                 $remain[$key] = $prRemain->remain;
               }
               ?>
               @endforeach
-              <td>                
-                @foreach ($remain as $key=>$r)   
+              <td>
+                @foreach ($remain as $key=>$r)
                 {{$data['target']->pr_focus[$key]->product}}: {{$remain[$key]}} <br>
                 @endforeach
+              </td>
+              <!-- percentage graph -->
+              <?php
+                $income = $report->income / $data['target']->target_omset * 100;
+                $effCall = {{$report->eff_call / $data['target']->target_eff_call * 100;
+                $productFocus = {{$report->income / $data['target']->pr * 100
+              ?>
+              <td>
+                <!-- income -->
+                <div class="progressDiv">
+                  <div class="statChartHolder">
+                    <div class="progress-pie-chart income" data-percent="}}">
+                      <!--Pie Chart -->
+                      <div class="ppc-progress">
+                        <div class="ppc-progress-fill income"></div>
+                      </div>
+                      <div class="ppc-percents">
+                        <div class="pcc-percents-wrapper">
+                          <span class="income">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!--End Chart -->
+                  </div>
+                  <div class="statRightHolder">
+                    <ul class="statsLeft">
+                      <li>
+                        <h3 class="yellow">22%</h3> <span>Comments</span>
+                      </li>
+                      <li>
+                        <h3 class="red">37%</h3> <span>Cheers</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- eff-call -->
+                <div class="progressDiv">
+                  <div class="statChartHolder">
+                    <div class="progress-pie-chart eff-call" data-percent="9">
+                      <!--Pie Chart -->
+                      <div class="ppc-progress">
+                        <div class="ppc-progress-fill eff-call"></div>
+                      </div>
+                      <div class="ppc-percents">
+                        <div class="pcc-percents-wrapper">
+                          <span class="eff-call">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!--End Chart -->
+                  </div>
+                  <div class="statRightHolder">
+                    <ul class="statsLeft">
+                      <li>
+                        <h3 class="yellow">22%</h3> <span>Comments</span>
+                      </li>
+                      <li>
+                        <h3 class="red">37%</h3> <span>Cheers</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- product-focus -->
+                <div class="progressDiv">
+                  <div class="statChartHolder">
+                    <div class="progress-pie-chart product-focus" data-percent="20">
+                      <!--Pie Chart -->
+                      <div class="ppc-progress">
+                        <div class="ppc-progress-fill product-focus"></div>
+                      </div>
+                      <div class="ppc-percents">
+                        <div class="pcc-percents-wrapper">
+                          <span class="product-focus">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!--End Chart -->
+                  </div>
+                  <div class="statRightHolder">
+                    <ul class="statsLeft">
+                      <li>
+                        <h3 class="yellow">22%</h3> <span>Comments</span>
+                      </li>
+                      <li>
+                        <h3 class="red">37%</h3> <span>Cheers</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </td>
             </tr>
             @endforeach
@@ -111,21 +231,21 @@
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body"> 
+        <div class="modal-body">
           <form action="{{url('/')}}/target" class="form-horizontal form-label-left" method="POST">
-            {{csrf_field()}}            
-            <input type="hidden" id="targetId" name="id"> 
+            {{csrf_field()}}
+            <input type="hidden" id="targetId" name="id">
             <div class="form-group row">
               <label class="control-label col-md-3 col-sm-2 label-align">Target Omset</label>
-              <div class="col-md-6 col-sm-6">           
-                <input type="number" class="form-control" name="target_omset" id="target_omset" value="" placeholder=""  required>
-              </div>                
+              <div class="col-md-6 col-sm-6">
+                <input type="number" class="form-control" name="target_omset" id="target_omset" value="" placeholder="" required>
+              </div>
             </div>
             <div class="form-group row">
               <label class="control-label col-md-3 col-sm-2 label-align">Target Effective Call</label>
-              <div class="col-md-6 col-sm-6">           
-                <input type="number" class="form-control" name="target_eff_call" id="target_eff_call" value="" placeholder=""  required>
-              </div>                
+              <div class="col-md-6 col-sm-6">
+                <input type="number" class="form-control" name="target_eff_call" id="target_eff_call" value="" placeholder="" required>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -133,14 +253,14 @@
               <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
             </div>
           </form>
-        </div>        
+        </div>
       </div>
     </div>
   </div>
-  <!-- /target Modal -->  
-  
-  <!-- Confirm Del Modal -->   
-  <div class="modal fade modal-confi"tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- /target Modal -->
+
+  <!-- Confirm Del Modal -->
+  <div class="modal fade modal-confi" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <form action="{{url('/')}}/target/product-focus/del" method="post" accept-charset="utf-8">
@@ -160,38 +280,35 @@
       </div>
     </div>
   </div>
-  <!-- /Confirm Del Modal -->   
-</div>
-</div>
-<!-- /page content-->
-@stack('scripts')
-<script src="{{asset('resources/js/views/target.js')}}"></script>
-@endstack
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"
-async defer></script>
+  <!-- /Confirm Del Modal -->
+  </div>
+  </div>
+  <!-- /page content-->
+  @stack('scripts')
+  <script src="{{asset('resources/js/views/target.js')}}"></script>
+  @endstack
+  <script src="{{asset('resources/js/views/rpie.js')}}" async defer></script>
 
-<script type="text/javascript">
-  
-
-  @if (Session::has('add'))  
-  setTimeout(function() {
-    pnotify('Sukses', 'Target berhasil ditambahkan','success');
-  }, 2000);
-  @endif
-  @if (Session::has('update'))  
-  setTimeout(function() {
-    pnotify('Sukses', 'Target berhasil diperbarui','success');
-  }, 2000);
-  @endif
-  @if (Session::has('del'))  
-  setTimeout(function() {
-    pnotify('Sukses', 'Target berhasil dihapus','success');
-  }, 2000);
-  @endif
-  @if (Session::has('error'))  
-  setTimeout(function() {
-    pnotify('Gagal', 'Terjadi kesalahan sistem','error');
-  }, 2000);
-  @endif
-</script>
+  <script type="text/javascript">
+    @if(Session::has('add'))
+    setTimeout(function() {
+      pnotify('Sukses', 'Target berhasil ditambahkan', 'success');
+    }, 2000);
+    @endif
+    @if(Session::has('update'))
+    setTimeout(function() {
+      pnotify('Sukses', 'Target berhasil diperbarui', 'success');
+    }, 2000);
+    @endif
+    @if(Session::has('del'))
+    setTimeout(function() {
+      pnotify('Sukses', 'Target berhasil dihapus', 'success');
+    }, 2000);
+    @endif
+    @if(Session::has('error'))
+    setTimeout(function() {
+      pnotify('Gagal', 'Terjadi kesalahan sistem', 'error');
+    }, 2000);
+    @endif
+  </script>
 </body>

@@ -4,7 +4,13 @@
   <!-- <link rel="stylesheet" href="{{ asset('assets/table_horz_scroll/vendor/bootstrap/css/bootstrap.min.css') }}"> -->
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css">
-  <link rel="stylesheet" href="{{ asset('resources/css/report.css') }}"> 
+  <link rel="stylesheet" href="{{ asset('resources/css/report.css') }}">
+  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+  <script src="{{asset('resources/js/views/rpie.js')}}"></script>
 </head>
 <!-- page content -->
 
@@ -37,7 +43,7 @@
                 <th width="10px">
                   <center>No<center>
                 </th>
-                <th>
+                <th width="100px">
                   <div class="row">
                     <div class="col">
                       <center>Sales</center>
@@ -69,7 +75,7 @@
                 <th width="150px">
                   <center>Sisa Target Produk Fokus</center>
                 </th>
-                <th width="210px">
+                <th>
                   <center>Graph</center>
                 </th>
               </tr>
@@ -91,7 +97,7 @@
 
             // $remainPrFocus = $data['pr_focus']-
             ?>
-            
+
             <tr>
               <td>
                 <center>{{$key+1}}</center>
@@ -111,8 +117,14 @@
               <td>
                 <center>{{$remainEff}}</center>
               </td>
+
+              <!-- Product Focus -->
+              <?php $productFocusTotal = 0;
+              $productFocusTotalRemain = 0; ?>
               @foreach ($report->pr_focus_remain as $key=>$prRemain)
               <?php
+              $productFocusTotal += $prRemain->remain + $prRemain->quantity;
+              $productFocusTotalRemain += $prRemain->remain;
               if ($prRemain->remain < 1) {
                 $remain[$key] = 'Tercapai';
               } else {
@@ -127,92 +139,47 @@
               </td>
               <!-- percentage graph -->
               <?php
-                $income = $report->income / $data['target']->target_omset * 100;
-                $effCall = {{$report->eff_call / $data['target']->target_eff_call * 100;
-                $productFocus = {{$report->income / $data['target']->pr * 100
+              // $income = round( / $data['target']->target_omset * 100);
+              $effCall = round($report->eff_call / $data['target']->target_eff_call * 100);
+              $productFocus = round(($productFocusTotal - $productFocusTotalRemain) / $productFocusTotal * 100);
               ?>
               <td>
                 <!-- income -->
-                <div class="progressDiv">
-                  <div class="statChartHolder">
-                    <div class="progress-pie-chart income" data-percent="}}">
-                      <!--Pie Chart -->
-                      <div class="ppc-progress">
-                        <div class="ppc-progress-fill income"></div>
-                      </div>
-                      <div class="ppc-percents">
-                        <div class="pcc-percents-wrapper">
-                          <span class="income">%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!--End Chart -->
-                  </div>
-                  <div class="statRightHolder">
-                    <ul class="statsLeft">
-                      <li>
-                        <h3 class="yellow">22%</h3> <span>Comments</span>
-                      </li>
-                      <li>
-                        <h3 class="red">37%</h3> <span>Cheers</span>
-                      </li>
-                    </ul>
-                  </div>
+                <div class="row">
+                  <div class="col" id="chartdiv" style="padding-left: 0px; padding-right: 0px;  margin-top: 0px;"></div>
+                  <script>
+                    chart([{
+                      "country": "Total Omset",
+                      "litres": `{{$report->income}}`
+                    }, {
+                      "country": "Sisa Target",
+                      "litres": `{{$data['target']->target_omset-$report->income}}`
+                    }], 1)
+                  </script>
+                  <div class="col" id="chartdiv" style="padding-left: 0px; padding-right: 0px;"></div>
+                  <script>
+                    chart([{
+                      "country": "Total Effective Call",
+                      "litres": `{{$report->eff_call}}`
+                    }, {
+                      "country": "Sisa Target",
+                      "litres": `{{$data['target']->target_eff_call-$report->eff_call}}`
+                    }], 2)
+                  </script>
+                  <div class="col" id="chartdiv" style="padding-left: 0px; padding-right: 0px;"></div>
+                  <script>
+                    chart([{
+                      "country": "Total Produk Fokus",
+                      "litres": `{{$productFocusTotal-$productFocusTotalRemain}}`
+                    }, {
+                      "country": "Sisa Target",
+                      "litres": `{{$productFocusTotalRemain}}`
+                    }], 3)
+                  </script>
                 </div>
-                <!-- eff-call -->
-                <div class="progressDiv">
-                  <div class="statChartHolder">
-                    <div class="progress-pie-chart eff-call" data-percent="9">
-                      <!--Pie Chart -->
-                      <div class="ppc-progress">
-                        <div class="ppc-progress-fill eff-call"></div>
-                      </div>
-                      <div class="ppc-percents">
-                        <div class="pcc-percents-wrapper">
-                          <span class="eff-call">%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!--End Chart -->
-                  </div>
-                  <div class="statRightHolder">
-                    <ul class="statsLeft">
-                      <li>
-                        <h3 class="yellow">22%</h3> <span>Comments</span>
-                      </li>
-                      <li>
-                        <h3 class="red">37%</h3> <span>Cheers</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- product-focus -->
-                <div class="progressDiv">
-                  <div class="statChartHolder">
-                    <div class="progress-pie-chart product-focus" data-percent="20">
-                      <!--Pie Chart -->
-                      <div class="ppc-progress">
-                        <div class="ppc-progress-fill product-focus"></div>
-                      </div>
-                      <div class="ppc-percents">
-                        <div class="pcc-percents-wrapper">
-                          <span class="product-focus">%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!--End Chart -->
-                  </div>
-                  <div class="statRightHolder">
-                    <ul class="statsLeft">
-                      <li>
-                        <h3 class="yellow">22%</h3> <span>Comments</span>
-                      </li>
-                      <li>
-                        <h3 class="red">37%</h3> <span>Cheers</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                <script>
+                  chartpie();
+                </script>
               </td>
             </tr>
             @endforeach
@@ -286,8 +253,8 @@
   <!-- /page content-->
   @stack('scripts')
   <script src="{{asset('resources/js/views/target.js')}}"></script>
+
   @endstack
-  <script src="{{asset('resources/js/views/rpie.js')}}" async defer></script>
 
   <script type="text/javascript">
     @if(Session::has('add'))

@@ -6,204 +6,91 @@
 
 /* Chart */
 
-.progressDiv {
-    width: 100%;
-    height: 75px;
-    position: relative;
-    display: inline-block;
-}
-
-.statChartHolder {
-    width: 40%;
-    height: 90%;
-    position: relative;
-    border-right: 1px solid #ccc;
-    display: inline-block;
-}
-
-.statRightHolder {
-    display: inline-block;
-    height: 90%;
-    width: 80%;
-    position: absolute;
-    margin: 0;
-}
-
-.statRightHolder ul {
-    list-style: none;
-    margin: 0;
-}
-
-.statRightHolder li {
-    border-bottom: 1px solid #ccc;
-    height: 85px;
-    width: 95%;
-    position: relative;
-    top: -25px;
-}
-
-.statRightHolder h3 {
-    display: inline-block;
-    color: #B6B5B5;
-    font-weight: 300;
-    font-size: 38px;
-}
-
-.statRightHolder span {
-    display: inline-block;
-    color: #B6B5B5;
-    font-size: 21px;
-    font-weight: 300;
-}
-
-.statsLeft {
-    list-style: none;
-    display: inline-block;
+#chartdiv {
     width: 100%;
 }
 
-.statsLeft li {
-    width: 100%;
-    height: 0px;
-    border: none;
-    top: 5px;
-    margin-bottom: 25px;
-    margin-left: -35px;
-}
-
-.statsLeft h3 {
-    font-size: 12px;
-    display: inline-block;
-}
-
-.statsLeft span {
-    font-size: 12px;
-    display: inline-block;
-}
-
-.statsRight {
-    width: 45%;
-    display: inline-block;
-    position: absolute;
-}
-
-.statsRight li {
-    width: 100%;
-    height: 14px;
-    border: none;
-    top: 5px;
-    margin-bottom: 25px;
-}
-
-.statsRight h3 {
-    font-size: 17px;
-    display: inline-block;
-}
-
-.statsRight span {
-    font-size: 17px;
-    display: inline-block;
-}
-
-
-/* Pie Chart */
-
-.progress-pie-chart {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #E5E5E5;
-    position: relative;
-}
-
-.progress-pie-chart.income.gt-50 {
-    background-color: #81CE97;
-}
-
-.progress-pie-chart.eff-call.gt-50 {
-    background-color: #4287f5;
-}
-
-.progress-pie-chart.product-focus.gt-50 {
-    background-color: #b3b150;
-}
-
-.ppc-progress {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    left: calc(50% - 35px);
-    top: calc(50% - 35px);
-    width: 70px;
-    height: 70px;
-    clip: rect(0, 70px, 70px, 35px);
-}
-
-.ppc-progress .ppc-progress-fill {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    left: calc(50% - 35px);
-    top: calc(50% - 35px);
-    width: 70px;
-    height: 70px;
-    clip: rect(0, 35px, 70px, 0);
-    transform: rotate(60deg);
-}
-
-.ppc-progress .ppc-progress-fill.income {
-    background: #81CE97;
-}
-
-.ppc-progress .ppc-progress-fill.eff-call {
-    background: #4287f5;
-}
-
-.ppc-progress .ppc-progress-fill.product-focus {
-    background: #b3b150;
-}
-
-.gt-50 .ppc-progress {
-    clip: rect(0, 35px, 70px, 0);
-}
-
-.gt-50 .ppc-progress .ppc-progress-fill {
-    clip: rect(0, 70px, 70px, 35px);
-    background: #E5E5E5;
-}
-
-.ppc-percents {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    left: calc(50% - 50.91304px/2);
-    top: calc(50% - 50.91304px/2);
-    width: 50.91304px;
-    height: 50.91304px;
-    background: #fff;
-    text-align: center;
-    display: table;
-}
-
-.ppc-percents span {
-    display: block;
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-.ppc-percents span.income {
+.tiny-chartbox span.income {
     color: #81CE97;
 }
 
-.ppc-percents span.eff-call {
+.tiny-chartbox span.eff-call {
     color: #4287f5;
 }
 
-.ppc-percents span.product-focus {
+.tiny-chartbox span.product-focus {
     color: #b3b150;
 }
 
-.pcc-percents-wrapper {
-    display: table-cell;
-    vertical-align: middle;
+@import "bourbon";
+@import url(//fonts.googleapis.com/css?family=Oswald:400);
+body {
+    font-family: "Oswald", sans-serif;
+}
+
+.chart {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.doughnutTip {
+    position: absolute;
+    min-width: 30px;
+    max-width: 300px;
+    padding: 5px 15px;
+    border-radius: 1px;
+    background: rgba(0, 0, 0, .8);
+    color: #ddd;
+    font-size: 17px;
+    text-shadow: 0 1px 0 #000;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: .06em;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    &::after {
+        position: absolute;
+        left: 50%;
+        bottom: -6px;
+        content: "";
+        height: 0;
+        margin: 0 0 0 -6px;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+        border-top: 6px solid rgba(0, 0, 0, .7);
+        line-height: 0;
+    }
+}
+
+.doughnutSummary {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #d5d5d5;
+    text-align: center;
+    text-shadow: 0 -1px 0 #111;
+    cursor: default;
+}
+
+.doughnutSummaryTitle {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    margin-top: -27%;
+    font-size: 22px;
+    letter-spacing: .06em;
+}
+
+.doughnutSummaryNumber {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    margin-top: -15%;
+    font-size: 15px;
+}
+
+.chart path:hover {
+    opacity: 0.65;
 }

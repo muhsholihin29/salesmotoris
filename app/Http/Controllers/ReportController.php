@@ -214,8 +214,9 @@ class ReportController extends Controller
 
 		//marker visited store
 		$data['visited_store'] = [];
+		$todayName = $this->getDayName(date('w', strtotime(date('Y-m-d'))));
 		$store = \App\Store::where('status', '1')->get(); //approved store & senin
-		$visitation = \App\Visitation::where('days', 'Senin')->get(); //today
+		$visitation = \App\Visitation::where('days', $todayName)->get(); //today
 		foreach ($visitation as $visit) {
 			$report = \App\Visitation::select('stores.id as id_store', 'stores.name as store', 'stores.coordinate as coordinate', 'visitation.days as visit', DB::raw('COUNT(total_income) as transactions'))
 				->leftJoin('transactions',function($join){
@@ -353,6 +354,28 @@ class ReportController extends Controller
 			$tanggal = substr($tanggal, 0, 10);
 			$split = explode('-', $tanggal);
 			return $split[2] . ' ' . $bulan[(int)$split[1]] . ' ' . $split[0];
+		}
+	}
+
+	function getDayName($dayOfWeek) {
+
+		switch ($dayOfWeek){
+			case 0:
+			return 'Minggu';
+			case 1:
+			return 'Senin';
+			case 2:
+			return 'Selasa';
+			case 3:
+			return 'Rabu';
+			case 4:
+			return 'Kamis';
+			case 5:
+			return 'Jumat';
+			case 6:
+			return 'Sabtu';
+			default:
+			return '';
 		}
 	}
 }

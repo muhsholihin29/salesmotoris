@@ -65,3 +65,63 @@ $(document).ready(function() {
         a.click();
     });
 });
+
+function mappingStore(store) {
+    // var store = JSON.parse(storex);
+    console.log(store);
+    // store = [{ lat: -7.298751, lng: 112.755944, store: "Toko Bu reni", visited: true },
+    //     { lat: -6.990088, lng: 112.565156, store: "Toko Pak Husain fahmi", visited: false }
+    // ];
+    // console.log(JSON.stringify(store));
+
+    // execute
+    (function() {
+        // var person = [{firstName:"John", lastName:"Doe", age:46}];
+        // person[0]["firstName"];
+        // store = [{ lat: -7.298751, lng: 112.755944, store: "Toko Bu reni", visited: true },
+        //     { lat: -6.990088, lng: 112.565156, store: "Toko Pak Husain fahmi", visited: false }
+        // ];
+
+        // map options
+        var options = {
+            zoom: 10,
+            center: { lat: Number(store[0].lat), lng: Number(store[0].lng) },
+            mapTypeControl: false
+        };
+
+        // init map
+        var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+
+        // set multiple marker
+        var i = 0;
+        store.forEach(element => {
+            // init markers
+            // console.log(element.store)
+            if (element.visited) {
+                var marker = new google.maps.Marker({
+                    position: { lat: Number(element.lat), lng: Number(element.lng) },
+                    map: map,
+                    icon: "http://maps.google.com/mapfiles/kml/paddle/grn-diamond.png"
+                });
+            } else {
+                var marker = new google.maps.Marker({
+                    position: { lat: Number(element.lat), lng: Number(element.lng) },
+                    map: map,
+                    icon: "http://maps.google.com/mapfiles/kml/paddle/red-diamond.png"
+                });
+            }
+
+            // process multiple info windows
+            (function(marker, i) {
+                // add click event
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow = new google.maps.InfoWindow({
+                        content: element.store
+                    });
+                    infowindow.open(map, marker);
+                });
+            })(marker, i);
+            i++;
+        });
+    })();
+}

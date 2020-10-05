@@ -26,6 +26,7 @@
           <div class="clearfix"></div>
         </div>
         <div class="x_content">
+        <button type="button" class="btn btn-success" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target=".modal-store-visit" onclick="return mappingStore({{json_encode($data['visited_store'])}});">Harian Toko</button>
           <div class="item form-group row ">
             <label class="control-label col-md-3 col-sm-3 label-align">Tanggal</label>
             <div class="col-md-4 col-sm-3">                  
@@ -161,12 +162,34 @@
   </div>
 </div>
 <!-- /excel Modal -->  
+<!-- Store Visitation Modal -->
+<div class="modal fade modal-store-visit" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="update-label">Mapping Kunjungan Toko </h4><span> </span>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+      <div id="map_canvas" style="width: 100%; height:500px;"></div> 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="button" class="btn btn-success" id="btnExpExcel" name="" value="Unduh Excel">
+          <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
+        </div>
+      </div>        
+    </div>
+  </div>
+</div>
+<!-- /Store Visitation Modal -->  
 </div>
 </div>
 
 <!-- /page content-->
 
 <script src="{{asset('resources/js/views/report.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpgqgMyPGWmhiw8yXyJJ7UuNAOpBWBSDA"></script>
 <script type="text/javascript">
 
 

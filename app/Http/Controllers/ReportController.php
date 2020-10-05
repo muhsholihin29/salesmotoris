@@ -11,7 +11,7 @@ class ReportController extends Controller
 	function index(Request $request) //sales
 	{
 		$data['request'] = $request;
-  //   	$data['target_transaction'] = \App\Target::select('target.id', 'target.id_sales', 'target.target_omset', 'target.target_eff_call', DB::raw('COUNT(total_income) as eff_call'), 'users.name', DB::raw('SUM(total_income) AS income'))
+		//   	$data['target_transaction'] = \App\Target::select('target.id', 'target.id_sales', 'target.target_omset', 'target.target_eff_call', DB::raw('COUNT(total_income) as eff_call'), 'users.name', DB::raw('SUM(total_income) AS income'))
 		// ->join('users', 'users.id', '=', 'target.id_sales')
 		// ->join('transactions', 'transactions.id_sales', '=', 'users.id')
 		// ->whereYear('transactions.created_at','=', date('Y'))
@@ -20,33 +20,33 @@ class ReportController extends Controller
 		$data['target'] = \App\Target::first();
 
 		$data['report'] = \App\Transaction::select('users.id', 'users.name', DB::raw('COUNT(total_income) as eff_call'), DB::raw('SUM(total_income) AS income'))
-		->groupBy('users.id')
-		->join('users', 'users.id', '=', 'transactions.id_sales')
-		->whereYear('transactions.created_at','=', date('Y'))
-		->whereMonth('transactions.created_at','=', date('m'))
-		->get();
+			->groupBy('users.id')
+			->join('users', 'users.id', '=', 'transactions.id_sales')
+			->whereYear('transactions.created_at', '=', date('Y'))
+			->whereMonth('transactions.created_at', '=', date('m'))
+			->get();
 
 		$data['target']->pr_focus = \App\ProductFocus::select('target_product_focus.id_product', 'target_product_focus.target', 'products.name AS product')->join('products', 'products.id', '=', 'target_product_focus.id_product')->get();
-		$pr_focus_total = \App\ProductFocus::select('id_product', 'target',DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
+		$pr_focus_total = \App\ProductFocus::select('id_product', 'target', DB::raw('SUM(target) AS pr_focus'))->first()->pr_focus;
 
 		$i = 0;
-		
+
 		foreach ($data['report'] as $forReport) {
 			$report = [];
-			foreach ($data['target']->pr_focus as $forFocus) {				
+			foreach ($data['target']->pr_focus as $forFocus) {
 				$pr_focus = \App\DetailTransaction::select('detail_transactions.id_product', 'transactions.id_sales', DB::raw('(SUM(detail_transactions.quantity)) AS quantity'))
-				->groupBy('detail_transactions.id_product')
-				->join('transactions', 'transactions.id', '=', 'detail_transactions.id_transaction')
-				->where('transactions.id_sales', $forReport->id)
-				->where('detail_transactions.id_product', $forFocus->id_product)
-				->whereYear('detail_transactions.created_at','=', date('Y'))
-				->whereMonth('detail_transactions.created_at','=', date('m'))
-				->first();
+					->groupBy('detail_transactions.id_product')
+					->join('transactions', 'transactions.id', '=', 'detail_transactions.id_transaction')
+					->where('transactions.id_sales', $forReport->id)
+					->where('detail_transactions.id_product', $forFocus->id_product)
+					->whereYear('detail_transactions.created_at', '=', date('Y'))
+					->whereMonth('detail_transactions.created_at', '=', date('m'))
+					->first();
 
 				if ($pr_focus != null && $pr_focus->id_product != null) {
 					$pr_focus->remain = $forFocus->target - $pr_focus->quantity;
-					array_push($report, $pr_focus);						
-				}else {
+					array_push($report, $pr_focus);
+				} else {
 					$pr = (object)[
 						"id_product" => $forFocus->id_product,
 						"quantity" => "0",
@@ -60,16 +60,16 @@ class ReportController extends Controller
 			$forReport->pr_focus_remain = $report;
 		}
 
-		
+
 		// echo(json_encode($data));
 		// return;
-		
+
 		$data['tgl_start'] = $request->get('tgl_start', 0);
 		$data['tgl_end'] = $request->get('tgl_end', 0);
 
 		if ($data['report']) {
 			return \Template::display_gentelella('report_sales', 'Target', $data);
-		}else{
+		} else {
 			return redirect('report_sales')->with('error', 'Data');
 		}
 	}
@@ -78,22 +78,22 @@ class ReportController extends Controller
 	{
 		$data['request'] = $request;
 		$store = \App\Store::where('status', '1') //approved store
-		->get();
+			->get();
 		$dateStart = $request->get('date_start', date('Y-m-1'));
 		$dateEnd = $request->get('date_end', date('Y-m-d'));
 		// $data['store'] = \App\Store::get();
 		// echo(json_encode($store));
 		$data['report_store'] = [];
-		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
-		
+		$data['date_picker'] = $this->tanggal_indo($dateStart) . ' - ' . $this->tanggal_indo($dateEnd);
+
 		foreach ($store as $st) {
 			$report = \App\Transaction::select('stores.id as id_store', 'stores.name as store', DB::raw('COUNT(total_income) as transactions'))
-			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
-			->join('stores', 'stores.id', '=', 'visitation.id_store')
-			->where('id_store', $st->id)
-			->where('transactions.total_items', '>', 0)
-			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
-			->first();
+				->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+				->join('stores', 'stores.id', '=', 'visitation.id_store')
+				->where('id_store', $st->id)
+				->where('transactions.total_items', '>', 0)
+				->whereBetween('transactions.created_at', [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"])
+				->first();
 			if ($report->id_store == null) {
 				$report = [
 					"id_store" => $st->id,
@@ -103,13 +103,13 @@ class ReportController extends Controller
 			}
 			array_push($data['report_store'], $report);
 		}
-		
+
 		// echo(json_encode($data['report_store']));
 		// return;
 		$data['report'] = json_encode($data['report_store']);
 		if ($store) {
 			return \Template::display_gentelella('report_store', 'Laporan Toko', $data);
-		}else{
+		} else {
 			return redirect('report_sales')->with('error', 'Data');
 		}
 	}
@@ -122,22 +122,22 @@ class ReportController extends Controller
 		// $data['store'] = \App\Store::get();
 		// echo(json_encode($store));
 		$data['report_store'] = [];
-		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
+		$data['date_picker'] = $this->tanggal_indo($dateStart) . ' - ' . $this->tanggal_indo($dateEnd);
 		$data['report'] = \App\Transaction::select('users.id', 'users.name', 'stores.name AS store', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
-		->join('users', 'users.id', '=', 'transactions.id_sales')
-		->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
-		->join('stores', 'stores.id', '=', 'visitation.id_store')
-		// ->join('detail_transactions', 'detail_transactions.id', '=', 'transactions.id')
-		->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
-		->get();
+			->join('users', 'users.id', '=', 'transactions.id_sales')
+			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
+			->join('stores', 'stores.id', '=', 'visitation.id_store')
+			// ->join('detail_transactions', 'detail_transactions.id', '=', 'transactions.id')
+			->whereBetween('transactions.created_at', [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"])
+			->get();
 
 		foreach ($data['report'] as $forReport) {
 			$forReport->date = $this->tanggal_indo($forReport->date);
 
 			$forReport->product = \App\DetailTransaction::select('detail_transactions.id_product', 'detail_transactions.quantity', 'products.name AS product', 'detail_transactions.sub_total')
-			->join('products', 'products.id', '=', 'detail_transactions.id_product')
-			->where('id_transaction', $forReport->id_transaction)
-			->get();
+				->join('products', 'products.id', '=', 'detail_transactions.id_product')
+				->where('id_transaction', $forReport->id_transaction)
+				->get();
 			// $data['report']->product = 
 		}
 
@@ -146,7 +146,7 @@ class ReportController extends Controller
 
 
 		//Export excel
-		
+
 		// $dateStart = $request->get('date_start', date('Y-m-d'));
 		// $dateEnd = $request->get('date_end', date('Y-m-d'));
 		// $dateStart = $request->get('date_start', date('2020-09-03'));
@@ -155,42 +155,42 @@ class ReportController extends Controller
 		// echo(json_encode($store));
 		$sales = \App\User::where('level', 'sales')->get();
 		// echo(json_encode($sales));
-		
-			$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'stores.name AS store', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
+
+		$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'stores.name AS store', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
 			->join('users', 'users.id', '=', 'transactions.id_sales')
 			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 			->join('stores', 'stores.id', '=', 'visitation.id_store')
-		
-			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+
+			->whereBetween('transactions.created_at', [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"])
 			->get();
-		
-		
+
+
 		$dataExcel = [];
 		$idSalesInDaily = 0;
 		foreach ($sales as $sal) {
 			$detailTrx = [];
 			$dataStore = [];
-			foreach ($dbReport as $dbRep) {			
-				if ($dbRep->sales_id == $sal->id){
+			foreach ($dbReport as $dbRep) {
+				if ($dbRep->sales_id == $sal->id) {
 					$idSalesInDaily = $dbRep->sales_id;
 					$dbReportDetail = \App\DetailTransaction::where('id_transaction', $dbRep->id_transaction)
-					->get();
+						->get();
 					foreach ($dbReportDetail as $ProductDetail) {
 						$ProductDetail->product = \App\Product::select('name', 'unit')
-						->where('id', $ProductDetail->id_product)
-						->first();
-					}					
+							->where('id', $ProductDetail->id_product)
+							->first();
+					}
 					$detailTrx = $dbReportDetail;
-				
-				array_push($dataStore, [
-					'id_store' => $dbRep->store_id,
-					'store' => $dbRep->store,
-					'income' => $dbRep->total_income,
-					'products' => $detailTrx
-				]);
+
+					array_push($dataStore, [
+						'id_store' => $dbRep->store_id,
+						'store' => $dbRep->store,
+						'income' => $dbRep->total_income,
+						'products' => $detailTrx
+					]);
 				}
 			}
-			if ($idSalesInDaily == $sal->id){
+			if ($idSalesInDaily == $sal->id) {
 				array_push($dataExcel, [
 					'id_sales' => $sal->id,
 					'name' => $sal->name,
@@ -205,20 +205,52 @@ class ReportController extends Controller
 		$mDateEnd = new DateTime($dateEnd);
 		if ($data['report'] == '[]') {
 			$data['error'] = 'empty';
-		}else if ($mDateStart->diff($mDateEnd)->format("%a") > 0){
+		} else if ($mDateStart->diff($mDateEnd)->format("%a") > 0) {
 			$data['error'] = 'date_invalid';
-		}else{
+		} else {
 			$data['error'] = '';
 		}
-		// echo(json_encode($data));
-		
-		// return;
 
+
+		//marker visited store
+		$data['visited_store'] = [];
+		$store = \App\Store::where('status', '1')->get(); //approved store & senin
+		$visitation = \App\Visitation::where('days', 'Senin')->get(); //today
+		foreach ($visitation as $visit) {
+			$report = \App\Visitation::select('stores.id as id_store', 'stores.name as store', 'stores.coordinate as coordinate', 'visitation.days as visit', DB::raw('COUNT(total_income) as transactions'))
+				->leftJoin('transactions',function($join){
+					$join->on('visitation.id', '=', 'transactions.id_visitation')
+					->whereDate('transactions.created_at', date('Y-m-d'));
+				})
+				->join('stores', 'stores.id', '=', 'visitation.id_store')
+				->where('id_store', $visit->id_store)				
+				// ->where('transactions.total_items', '>', 0)				
+				// ->orWhereDate('transactions.created_at', null)
+				->first();
+			$latLng = explode(", ", $report->coordinate);
+			$dataStore = [
+				"id_store" => $report->id_store,
+				"store" => $report->store,
+				"lat" => $latLng[0],
+				"lng" => $latLng[1],
+				"visited" => false
+			];
+			if ($report->transactions > 0) {
+				$dataStore["visited"] = true;
+			}
+			// echo (json_encode($report));
+			// if ($report->id_store == 4) {
+				// return;
+			// }
+			array_push($data['visited_store'], $dataStore);
+		}
+
+		// return;
 		if ($data['report']) {
 			return \Template::display_gentelella('report_daily', 'Laporan Harian', $data);
-		}else{
+		} else {
 			return redirect('report_sales')->with('error', 'Data');
-		}	
+		}
 	}
 
 	function print(Request $request)
@@ -232,16 +264,16 @@ class ReportController extends Controller
 		// echo(json_encode($store));
 		$sales = \App\User::where('level', 'sales')->get();
 		$data['report_store'] = [];
-		$data['date_picker'] = $this->tanggal_indo($dateStart).' - '. $this->tanggal_indo($dateEnd);
+		$data['date_picker'] = $this->tanggal_indo($dateStart) . ' - ' . $this->tanggal_indo($dateEnd);
 		// echo(json_encode($sales));
-		
-			$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
+
+		$dbReport = \App\Transaction::select('users.id AS sales_id', 'users.name', 'stores.id AS store_id', 'transactions.total_income', 'transactions.id AS id_transaction', 'transactions.image', 'transactions.created_at AS date')
 			->join('users', 'users.id', '=', 'transactions.id_sales')
 			->join('visitation', 'visitation.id', '=', 'transactions.id_visitation')
 			->join('stores', 'stores.id', '=', 'visitation.id_store')
 			// ->join('products', 'products.id', '=', 'visitation.products')
 			// ->join('detail_transactions', 'detail_transactions.id', '=', 'transactions.id')
-			->whereBetween('transactions.created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+			->whereBetween('transactions.created_at', [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"])
 			->get();
 		// echo(json_encode($dbReport));	
 		// return;
@@ -250,25 +282,25 @@ class ReportController extends Controller
 		foreach ($sales as $sal) {
 			$detailTrx = [];
 			$dataStore = [];
-			foreach ($dbReport as $dbRep) {			
-				if ($dbRep->sales_id == $sal->id){
+			foreach ($dbReport as $dbRep) {
+				if ($dbRep->sales_id == $sal->id) {
 					$idSalesInDaily = $dbRep->sales_id;
 					$dbReportDetail = \App\DetailTransaction::where('id_transaction', $dbRep->id_transaction)
-					->get();
+						->get();
 					foreach ($dbReportDetail as $ProductDetail) {
 						$ProductDetail->product = \App\Product::select('id', 'name AS product')
-						->where('id', $ProductDetail->id_product)
-						->first()->product;
-					}					
+							->where('id', $ProductDetail->id_product)
+							->first()->product;
+					}
 					$detailTrx = $dbReportDetail;
-				
-				array_push($dataStore, [
-					'id_store' => $dbRep->store_id,
-					'products' => $detailTrx
-				]);
+
+					array_push($dataStore, [
+						'id_store' => $dbRep->store_id,
+						'products' => $detailTrx
+					]);
 				}
 			}
-			if ($idSalesInDaily == $sal->id){
+			if ($idSalesInDaily == $sal->id) {
 				array_push($dataExcel, [
 					'id_sales' => $sal->id,
 					'transactions' => $dataStore
@@ -277,7 +309,7 @@ class ReportController extends Controller
 		}
 
 		// echo(json_encode($dataExcel));
-		
+
 		// return;
 
 		// foreach ($data['report'] as $forReport) {
@@ -294,16 +326,17 @@ class ReportController extends Controller
 		// return;
 		if ($data['report']) {
 			return \Template::display_gentelella('report_daily', 'Laporan Produk', $data);
-		}else{
+		} else {
 			return redirect('report_sales')->with('error', 'Data');
-		}	
+		}
 	}
 
 	function tanggal_indo($tanggal)
 	{
 		if ($tanggal != 0) {
-			
-			$bulan = array (1 =>   
+
+			$bulan = array(
+				1 =>
 				'Januari',
 				'Februari',
 				'Maret',
@@ -317,9 +350,9 @@ class ReportController extends Controller
 				'November',
 				'Desember'
 			);
-			$tanggal = substr($tanggal,0,10);
+			$tanggal = substr($tanggal, 0, 10);
 			$split = explode('-', $tanggal);
-			return $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
+			return $split[2] . ' ' . $bulan[(int)$split[1]] . ' ' . $split[0];
 		}
 	}
 }
